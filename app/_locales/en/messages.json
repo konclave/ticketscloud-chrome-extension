@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "TC Hall Plan",
+    "description": "The name of the application"
+  },
+  "appDescription": {
+    "message": "Ticketscloud extension for edit venue hall plans",
+    "description": "The description of the application"
+  }
+}
