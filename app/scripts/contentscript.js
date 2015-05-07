@@ -148,11 +148,29 @@ function seatsCompareSeatNoLtr(current, next) {
   }
 }
 
+function rowsCompareRowNo(current, next) {
+  if (current.getAttribute('tc-row-no') * 1 > next.getAttribute('tc-row-no') * 1) {
+    return 1;
+  } else if (current.getAttribute('tc-row-no') * 1 < next.getAttribute('tc-row-no') * 1) {
+    return -1;
+  } else {
+    return 0;
+  }
+}
 
-function postprocess(svg, params) {
+function postSortRows(svg) {
+  var sectors = svg.querySelectorAll('[tc-sector-name]');
+  Array.prototype.forEach.call(sectors, function(sector) {
+    var arr = Array.prototype.slice.call(sector.querySelectorAll('[tc-row-no]'));
+    arr.sort(rowsCompareRowNo);
+    appendSortedNodes(arr, sector);
+  });
+}
+
+function postSortSeats(svg, params) {
   var rows;
   if (params.order === 'ltr') {
-    rows = svg.getElementById('plan-container').querySelectorAll('[tc-row-no]');
+    rows = svg.querySelectorAll('[tc-row-no]');
 
     Array.prototype.forEach.call(rows, function(row) {
       var seats = row.querySelectorAll('[tc-seat-no]');
@@ -163,6 +181,11 @@ function postprocess(svg, params) {
       appendSortedNodes(arr, row);
     });
   }
+}
+
+function postProcess(svg, params) {
+  postSortSeats(svg, params);
+  postSortRows(svg);
 }
 
 chrome.runtime.onMessage.addListener(function(msg, sender, response) {
@@ -200,7 +223,7 @@ chrome.runtime.onMessage.addListener(function(msg, sender, response) {
       var svg;
       svg = document.querySelector('svg').cloneNode(true);
       clearTemporaryNodes(svg);
-      postprocess(svg, {order: msg.subject.order});
+      postProcess(svg, {order: msg.subject.order});
       response(svg.outerHTML);
     }
   }
