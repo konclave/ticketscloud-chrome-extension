@@ -120,7 +120,7 @@ function clearTemporaryNodes(svg) {
   Array.prototype.forEach.call(svg.querySelectorAll('.temporary'), function(node) {
     node.parentNode.removeChild(node);
   });
-  Array.prototype.forEach.call(svg.querySelectorAll('.active'), function(node) {
+  Array.prototype.forEach.call(svg.querySelectorAll('circle'), function(node) {
     node.removeAttribute('class');
     node.removeAttribute('fill');
   });
@@ -620,11 +620,13 @@ function wrapChildrenWithGroup(node) {
 }
 
 function wrapSingleGroups() {
-  var sectors = document.getElementById('plan-container').children;
-  if (/addsector/.test(sectors.item(0).getAttribute('id'))) {
-    sectors.item(0).removeAttribute('id');
-    wrapChildrenWithGroup(sectors.item(0).parentNode).setAttribute('id', 'Партер');
+  var sectors;
+  var rowWithoutSector = document.getElementById('plan-container').querySelector('[id*="addsector"]');
+  if (rowWithoutSector) {
+    rowWithoutSector.removeAttribute('id');
+    wrapChildrenWithGroup(rowWithoutSector.parentNode).setAttribute('id', 'Партер');
   } else {
+    sectors = document.getElementById('plan-container').children;
     Array.prototype.forEach.call(sectors, function(sector) {
       var title = sector.getAttribute('id');
       if (/_addrow/.test(title)) {
