@@ -26,13 +26,15 @@ function setRowNumbers() {
     var num = row.getAttribute('tc-row-no');
     var firstSeat = row.querySelector('circle');
     var text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-    text.innerHTML = num;
-    text.setAttribute('x', firstSeat.getAttribute('cx') * 1 + firstSeat.getAttribute('r') * 2);
-    text.setAttribute('y', firstSeat.getAttribute('cy') * 1 + firstSeat.getAttribute('r') / 2);
-    text.setAttribute('fill', 'blue');
-    text.setAttribute('font-size', firstSeat.getAttribute('r') * 2);
-    text.setAttribute('class', 'temporary');
-    firstSeat.parentNode.insertBefore(text, firstSeat);
+    if (firstSeat) {
+      text.innerHTML = num;
+      text.setAttribute('x', firstSeat.getAttribute('cx') * 1 + firstSeat.getAttribute('r') * 2);
+      text.setAttribute('y', firstSeat.getAttribute('cy') * 1 + firstSeat.getAttribute('r') / 2);
+      text.setAttribute('fill', 'blue');
+      text.setAttribute('font-size', firstSeat.getAttribute('r') * 2);
+      text.setAttribute('class', 'temporary');
+      firstSeat.parentNode.insertBefore(text, firstSeat);
+    }
   });
 }
 
@@ -285,7 +287,7 @@ function isSectorBroken(sector) {
     return 'Сектор без названия';
   } else if (!sector.children.length) {
     return 'Пустой сектор';
-  } else if (sector.querySelectorAll('g').length !== sector.children.length) {
+  } else if (sector.querySelectorAll('g').length !== sector.children.length && !sector.querySelector('[id*="sector_shape"]')) {
     return 'Неверный элемент вместо группы на уровне рядов';
   } else {
     return false;
@@ -293,6 +295,8 @@ function isSectorBroken(sector) {
 }
 
 function isRowBroken(row) {
+  if (/sector_shape/.test(row.getAttribute('id'))) return false;
+
   if (row.tagName !== 'g') {
     return 'Неверный элемент вместо группы на уровне ряда';
   } else if (!row.children.length) {
@@ -422,9 +426,9 @@ function cleanMeta() {
 
 
 function flatternTranslateTransform(row) {
-  var transform = row.getAttribute('transform'),
-    coords = {x: 0, y: 0},
-    translateParams;
+  var transform = row.getAttribute('transform');
+  var coords = {x: 0, y: 0};
+  var translateParams;
 
   if (transform) {
     translateParams = transform.match(/translate\((\d+\.?\d+?)\,? (\d+\.?\d+)?\)/);
@@ -485,7 +489,7 @@ function cleanTransforms() {
 
 
 function convertPaths() {
-  var paths = document.getElementById('plan-container').querySelectorAll('path');
+  var paths = document.getElementById('plan-container').querySelectorAll(':scope > g > g > path');
   if (paths) {
     Array.prototype.forEach.call(paths, convertPathToCircle);
   }
@@ -502,11 +506,9 @@ function seatsCompare(current, next) {
   }
 }
 
-
 function addSeatAttributes(seat, idx) {
   seat.setAttribute('tc-seat-no', idx + 1);
 }
-
 
 function appendSortedNodes(nodes, parent, callback) {
   var crlf;
@@ -529,7 +531,6 @@ function appendSortedNodes(nodes, parent, callback) {
     }
   });
 }
-
 
 function sortSeats(row) {
   var seats;
@@ -607,8 +608,7 @@ function setSectorName() {
 }
 
 function wrapChildrenWithGroup(node) {
-  var g;
-  g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+  var g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
   for (var i = 0, j = node.children.length; i < j; i++) {
     g.appendChild(node.children[0]);
   }
@@ -619,12 +619,23 @@ function wrapChildrenWithGroup(node) {
   return g;
 }
 
+function wrapNodeWithGroup(node) {
+  var g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+  node.parentNode.insertBefore(g, node);
+  g.appendChild(node);
+  return g;
+}
+
 function wrapSingleGroups() {
-  var sectors;
   var rowWithoutSector = document.getElementById('plan-container').querySelector('[id*="addsector"]');
+  var sectors;
+  var id;
+
   if (rowWithoutSector) {
-    rowWithoutSector.removeAttribute('id');
-    wrapChildrenWithGroup(rowWithoutSector.parentNode).setAttribute('id', 'Партер');
+    id = rowWithoutSector.getAttribute('id').replace(/\s?addsector\s?/, '');
+    rowWithoutSector.getAttribute('id', id);
+    id = id.replace(/\s?sector_shape\s?/, '');
+    wrapNodeWithGroup(rowWithoutSector).setAttribute('id', id);
   } else {
     sectors = document.getElementById('plan-container').children;
     Array.prototype.forEach.call(sectors, function(sector) {
@@ -654,7 +665,7 @@ function preprocess() {
 }
 
 if (svg) {
-  if (isAttributeSet() || preprocess()) {
+  if (/*isAttributeSet() || */preprocess()) {
     setSeatNumbers();
     setRowNumbers();
     attachEvents();
