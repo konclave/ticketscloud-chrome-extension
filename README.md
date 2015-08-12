@@ -1,3 +1,6 @@
+0.2.0
+ - addsector param renamed to add_sector
+
 0.1.1
  - Stand up sector definition fix
 
