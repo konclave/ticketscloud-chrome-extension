@@ -667,12 +667,12 @@
   }
 
   function wrapSingleGroups() {
-    var rowWithoutSector = document.getElementById('plan-container').querySelector('[id*="addsector"]');
+    var rowWithoutSector = document.getElementById('plan-container').querySelector('[id*="add_sector"]');
     var sectors;
     var id;
 
     if (rowWithoutSector) {
-      id = rowWithoutSector.getAttribute('id').replace(/\s?addsector\s?/, '');
+      id = rowWithoutSector.getAttribute('id').replace(/\s?add_sector\s?/, '');
       rowWithoutSector.getAttribute('id', id);
       id = id.replace(/\s?sector_shape\s?/, '');
       wrapNodeWithGroup(rowWithoutSector).setAttribute('id', id);
