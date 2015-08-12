@@ -316,11 +316,6 @@
     }
   }
 
-  function isAttributeSet() {
-    var container = svg.getElementById('plan-container');
-    return container.querySelectorAll('[tc-row-no]').length || container.querySelectorAll('[tc-seat-no]').length;
-  }
-
   function isPlanCorrect(container) {
 
     if (!container) {
@@ -440,7 +435,7 @@
     };
   }
 
-  function flatternTranslateTransform(row) {
+  function flattenTranslateTransform(row) {
     var transform = row.getAttribute('transform');
     var coords = {x: 0, y: 0};
     var translateParams;
@@ -495,9 +490,9 @@
 
     Array.prototype.forEach.call(sectors, function(sector) {
       var rows = sector.children;
-      flatternTranslateTransform(sector);
+      flattenTranslateTransform(sector);
       Array.prototype.forEach.call(rows, function(row) {
-        flatternTranslateTransform(row);
+        flattenTranslateTransform(row);
       });
     });
   }
@@ -510,17 +505,32 @@
   }
 
   function seatsCompare(current, next) {
-    if (current.getAttribute('cx') * 1 > next.getAttribute('cx') * 1) {
-      return -1;
-    } else if (current.getAttribute('cx') * 1 < next.getAttribute('cx') * 1) {
-      return 1;
+    var currentNo = current.getAttribute('tc-seat-no');
+    var nextNo = next.getAttribute('tc-seat-no');
+
+    if (currentNo && nextNo) {
+      if (parseInt(currentNo) > parseInt(nextNo)) {
+        return 11;
+      } else if (parseInt(currentNo) < parseInt(nextNo)) {
+        return -1;
+      } else {
+        return 0;
+      }
     } else {
-      return 0;
+      if (current.getAttribute('cx') * 1 > next.getAttribute('cx') * 1) {
+        return -1;
+      } else if (current.getAttribute('cx') * 1 < next.getAttribute('cx') * 1) {
+        return 1;
+      } else {
+        return 0;
+      }
     }
   }
 
   function addSeatAttributes(seat, idx) {
-    seat.setAttribute('tc-seat-no', idx + 1);
+    if (!seat.getAttribute('tc-seat-no')) {
+      seat.setAttribute('tc-seat-no', idx + 1);
+    }
   }
 
   function appendSortedNodes(nodes, parent, callback) {
@@ -570,15 +580,27 @@
   }
 
   function rowsCompare(current, next) {
+    var currentNo = current.getAttribute('tc-row-no');
+    var nextNo = next.getAttribute('tc-row-no');
     var currentY = current.getElementsByTagName('circle')[Math.floor(current.getElementsByTagName('circle').length / 2)].getAttribute('cy');
     var nextY = next.getElementsByTagName('circle')[Math.floor(next.getElementsByTagName('circle').length / 2)].getAttribute('cy');
 
-    if (currentY * 1 > nextY * 1) {
-      return 1;
-    } else if (currentY * 1 < nextY * 1) {
-      return -1;
+    if (currentNo && nextNo) {
+      if (parseInt(currentNo) > parseInt(nextNo)) {
+        return -1;
+      } else if (parseInt(currentNo) < parseInt(nextNo)) {
+        return 1;
+      } else {
+        return 0;
+      }
     } else {
-      return 0;
+      if (currentY * 1 > nextY * 1) {
+        return 1;
+      } else if (currentY * 1 < nextY * 1) {
+        return -1;
+      } else {
+        return 0;
+      }
     }
   }
 
@@ -588,7 +610,9 @@
 
     arr.sort(rowsCompare);
     appendSortedNodes(arr, parent, function(row, idx) {
-      row.setAttribute('tc-row-no', idx + 1);
+      if (!row.getAttribute('tc-row-no')) {
+        row.setAttribute('tc-row-no', idx + 1);
+      }
     });
   }
 
@@ -679,7 +703,7 @@
   }
 
   if (svg) {
-    if (/*isAttributeSet() || */preprocess()) {
+    if (preprocess()) {
       setSeatNumbers();
       setRowNumbers();
       attachEvents();
