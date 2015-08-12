@@ -1,3 +1,6 @@
+0.1.1
+ - Stand up sector definition fix
+
 0.1.0
  - Keep set row and seat numbers. Before they were rewritten by automate number set
  - Close extension popup in Save button click

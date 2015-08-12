@@ -606,6 +606,8 @@
 
   function sortRows(rows) {
     var arr = Array.prototype.slice.call(rows);
+    if (arr.length === 0) return;
+
     var parent = rows[0].parentNode;
 
     arr.sort(rowsCompare);
@@ -620,7 +622,7 @@
     var sectors = document.getElementById('plan-container').children;
 
     Array.prototype.forEach.call(sectors, function(sector) {
-      var rows = sector.children;
+      var rows = sector.querySelectorAll('g');
 
       Array.prototype.forEach.call(rows, function(row) {
         sortSeats(row);
