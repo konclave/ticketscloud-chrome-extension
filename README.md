@@ -1,16 +1,21 @@
-0.2.0
- - addsector param renamed to add_sector
+### 0.3.0
+- style classes are removed only on svg export to buffer
+- sort nodes according to set seat numbers on svg export
+- removed rtl ltr export params
 
-0.1.1
- - Stand up sector definition fix
+### 0.2.0
+- addsector param renamed to add_sector
 
-0.1.0
- - Keep set row and seat numbers. Before they were rewritten by automate number set
- - Close extension popup in Save button click
+### 0.1.1
+- Stand up sector definition fix
 
-0.0.8
- - Transform <path /> to <circle /> shape inside row groups only
- - Group on sector level with <path id="sector_shape" /> is correct structure now  
+### 0.1.0
+- Keep set row and seat numbers. Before they were rewritten by automate number set
+- Close extension popup in Save button click
 
-0.0.7
- - Fixed wraping rows with sector group when a row with id="addsector" exists
+### 0.0.8
+- Transform <path /> to <circle /> shape inside row groups only
+- Group on sector level with <path id="sector_shape" /> is correct structure now  
+
+### 0.0.7
+- Fixed wraping rows with sector group when a row with id="addsector" exists

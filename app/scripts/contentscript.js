@@ -160,34 +160,9 @@
     }
   }
 
-  function postSortRows(svg) {
-    var sectors = svg.querySelectorAll('[tc-sector-name]');
-    Array.prototype.forEach.call(sectors, function(sector) {
-      var arr = Array.prototype.slice.call(sector.querySelectorAll('[tc-row-no]'));
-      arr.sort(rowsCompareRowNo);
-      appendSortedNodes(arr, sector);
-    });
-  }
-
-  function postSortSeats(svg, params) {
-    var rows;
-    if (params.order === 'ltr') {
-      rows = svg.querySelectorAll('[tc-row-no]');
-
-      Array.prototype.forEach.call(rows, function(row) {
-        var seats = row.querySelectorAll('[tc-seat-no]');
-        var arr;
-
-        arr = Array.prototype.slice.call(seats);
-        arr.sort(seatsCompareSeatNoLtr);
-        appendSortedNodes(arr, row);
-      });
-    }
-  }
-
-  function postProcess(svg, params) {
-    postSortSeats(svg, params);
-    postSortRows(svg);
+  function postProcess(svg) {
+    flattenStyles(svg);
+    sortNodes(svg);
   }
 
   window.chrome.runtime.onMessage.addListener(function(msg, sender, response) {
@@ -227,7 +202,7 @@
         var svg;
         svg = document.querySelector('svg').cloneNode(true);
         clearTemporaryNodes(svg);
-        postProcess(svg, {order: msg.subject.order});
+        postProcess(svg);
         response(svg.outerHTML);
       }
     }
@@ -392,47 +367,91 @@
     };
   }
 
-  function cleanMeta() {
+  function flattenStyles(svg) {
     var sectorNameFontSize;
-    var fntRegexp;
+    var sectorFill;
+    var stroke;
+    var strokeWidth;
+    var fntRegExp;
+    var strokeRegExp;
+    var strokeWidthRegExp;
     var seats;
+    var styles;
 
-    for (var i = 0; i <= 2; i++) {
+    for (var i = 0; i <= 10; i++) {
       try {
-        fntRegexp = new RegExp('\\\.fnt' + i + '.+font-size:(\\d+)');
-        sectorNameFontSize = document.getElementsByTagName('style')[0].innerHTML.match(fntRegexp)[1];
-        Array.prototype.map.call(document.querySelectorAll('.fnt' + i), setFontAttrs(sectorNameFontSize));
+
+        fntRegExp = new RegExp('\\\.fnt' + i + '.+font-size:(\\d+)');
+        strokeRegExp = new RegExp('\\\.str' + i + '.+stroke:\\\s?((#.{6})|[A-Za-z]+)(;|\\\})');
+        strokeWidthRegExp = new RegExp('\\\.str' + i + '.+stroke-width:\\\s?(\\\d+)(;|\\\})');
+
+        styles = svg.getElementsByTagName('style')[0].innerHTML;
+
+        if (fntRegExp.test(styles)) {
+          sectorNameFontSize = styles.match(fntRegExp)[1];
+          Array.prototype.map.call(svg.querySelectorAll('.fnt' + i), setInlineFont(sectorNameFontSize));
+        }
+
+        if (strokeRegExp.test(styles)) {
+          stroke = styles.match(strokeRegExp)[1];
+          console.log(svg.querySelectorAll('.str' + i));
+          Array.prototype.map.call(svg.querySelectorAll('.str' + i), setInlineStroke(stroke));
+        }
+
+        if (strokeWidthRegExp.test(styles)) {
+          strokeWidth = styles.match(strokeWidthRegExp)[1];
+          Array.prototype.map.call(svg.querySelectorAll('.str' + i), setInlineStrokeWidth(strokeWidth));
+        }
       } catch (e) {
         window.console.log('not found style fnt' + i);
       }
     }
 
-    seats = document.querySelector('#plan-container').querySelectorAll('circle');
+    seats = svg.querySelector('#plan-container').querySelectorAll('circle');
     if (seats) {
       Array.prototype.forEach.call(seats, function(seat) {
         seat.removeAttribute('class');
       });
     }
 
-    seats = document.querySelector('#plan-container').querySelectorAll('path');
+    seats = svg.querySelector('#plan-container').querySelectorAll('path');
     if (seats) {
       Array.prototype.forEach.call(seats, function(seat) {
         seat.removeAttribute('class');
       });
     }
+  }
 
+  function setInlineFont(font) {
+    return function(element) {
+      element.setAttribute('font-family', 'Arial');
+      if (font) {
+        element.setAttribute('font-size', font);
+      }
+    };
+  }
+
+  function setInlineStroke(stroke) {
+    return function(element) {
+      if (stroke) {
+        element.setAttribute('stroke', stroke);
+      }
+    };
+  }
+
+  function setInlineStrokeWidth(strokeWidth) {
+    return function(element) {
+      if (strokeWidth) {
+        element.setAttribute('stroke-width', strokeWidth);
+      }
+    };
+  }
+
+  function cleanMeta() {
     document.querySelector('svg').setAttribute('height', '100%');
     document.querySelector('svg').setAttribute('width', '100%');
     document.querySelector('svg').removeAttribute('xml:space');
     document.querySelector('svg').removeAttribute('style');
-  }
-
-  function setFontAttrs(sectorNameFontSize) {
-    return function(txt) {
-      txt.removeAttribute('class');
-      txt.setAttribute('font-family', 'Arial');
-      txt.setAttribute('font-size', sectorNameFontSize);
-    };
   }
 
   function flattenTranslateTransform(row) {
@@ -587,9 +606,9 @@
 
     if (currentNo && nextNo) {
       if (parseInt(currentNo) > parseInt(nextNo)) {
-        return -1;
-      } else if (parseInt(currentNo) < parseInt(nextNo)) {
         return 1;
+      } else if (parseInt(currentNo) < parseInt(nextNo)) {
+        return -1;
       } else {
         return 0;
       }
@@ -606,7 +625,9 @@
 
   function sortRows(rows) {
     var arr = Array.prototype.slice.call(rows);
-    if (arr.length === 0) return;
+    if (arr.length === 0) {
+      return;
+    }
 
     var parent = rows[0].parentNode;
 
@@ -618,8 +639,8 @@
     });
   }
 
-  function sortNodes() {
-    var sectors = document.getElementById('plan-container').children;
+  function sortNodes(svg) {
+    var sectors = svg.getElementById('plan-container').children;
 
     Array.prototype.forEach.call(sectors, function(sector) {
       var rows = sector.querySelectorAll('g');
@@ -689,6 +710,8 @@
   }
 
   function preprocess() {
+    var svg = document.querySelector('svg');
+
     cleanMeta();
     wrapSingleGroups();
 
@@ -698,7 +721,7 @@
 
     cleanTransforms();
     convertPaths();
-    sortNodes();
+    sortNodes(svg);
     setSectorName();
 
     return true;

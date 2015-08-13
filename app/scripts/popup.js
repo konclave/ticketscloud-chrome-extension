@@ -69,18 +69,9 @@
     });
 
     document.getElementById('cbcopy').addEventListener('click', function(e) {
-      var radios = document.querySelectorAll('input[name="order"]');
-      var order;
-
-      Array.prototype.forEach.call(radios, function(radio) {
-        if (radio.checked) {
-          order = radio.value;
-        }
-      });
-
       e.preventDefault();
       e.target.style.background = 'tomato';
-      requestContentData({action: 'getSVG', order: order}, copyToClipboard);
+      requestContentData({action: 'getSVG'}, copyToClipboard);
     });
   });
 })();
