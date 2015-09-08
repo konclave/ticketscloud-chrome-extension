@@ -1,3 +1,9 @@
+### 0.3.2
+- remove Id attribute tags on save, fill stand up sectors with lightgrey color
+
+### 0.3.1
+- added polygon support as stand up sector shape
+
 ### 0.3.0
 - style classes are removed only on svg export to buffer
 - sort nodes according to set seat numbers on svg export

@@ -160,8 +160,18 @@
     }
   }
 
+  function removeIdTags(svg) {
+    var sectorShapes = svg.querySelectorAll('[id*="sector_shape"]');
+    Array.prototype.forEach.call(sectorShapes, function(sector) {
+      var id = sector.getAttribute('id').replace(/\s?sector_shape\s?/, '');
+      sector.setAttribute('fill', 'lightgrey');
+      sector.setAttribute('id', id);
+    });
+  }
+
   function postProcess(svg) {
     flattenStyles(svg);
+    removeIdTags(svg);
     sortNodes(svg);
   }
 
@@ -394,7 +404,6 @@
 
         if (strokeRegExp.test(styles)) {
           stroke = styles.match(strokeRegExp)[1];
-          console.log(svg.querySelectorAll('.str' + i));
           Array.prototype.map.call(svg.querySelectorAll('.str' + i), setInlineStroke(stroke));
         }
 
@@ -687,7 +696,7 @@
 
     if (rowWithoutSector) {
       id = rowWithoutSector.getAttribute('id').replace(/\s?add_sector\s?/, '');
-      rowWithoutSector.getAttribute('id', id);
+      rowWithoutSector.setAttribute('id', id);
       id = id.replace(/\s?sector_shape\s?/, '');
       wrapNodeWithGroup(rowWithoutSector).setAttribute('id', id);
     } else {
