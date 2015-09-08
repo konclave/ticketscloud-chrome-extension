@@ -163,9 +163,9 @@
   function removeIdTags(svg) {
     var sectorShapes = svg.querySelectorAll('[id*="sector_shape"]');
     Array.prototype.forEach.call(sectorShapes, function(sector) {
-      var id = sector.getAttribute('id').replace(/\s?sector_shape\s?/, '');
+      //var id = sector.getAttribute('id').replace(/\s?sector_shape\s?/, '');
       sector.setAttribute('fill', 'lightgrey');
-      sector.setAttribute('id', id);
+      //sector.setAttribute('id', id);
     });
   }
 
