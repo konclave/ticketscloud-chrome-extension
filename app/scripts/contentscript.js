@@ -284,7 +284,7 @@
   }
 
   function isSeatBroken(seat) {
-    if (seat.tagName !== 'circle' && seat.tagName !== 'path') {
+    if (seat.tagName !== 'circle' && seat.tagName !== 'path' && seat.tagName !== 'polygon') {
       return 'Неверный элемент на уровне места';
     } else {
       return false;
@@ -407,14 +407,7 @@
       }
     }
 
-    seats = svg.querySelector('#plan-container').querySelectorAll('circle');
-    if (seats) {
-      Array.prototype.forEach.call(seats, function(seat) {
-        seat.removeAttribute('class');
-      });
-    }
-
-    seats = svg.querySelector('#plan-container').querySelectorAll('path');
+    seats = svg.querySelector('#plan-container').querySelectorAll('circle, path, polygon');
     if (seats) {
       Array.prototype.forEach.call(seats, function(seat) {
         seat.removeAttribute('class');
