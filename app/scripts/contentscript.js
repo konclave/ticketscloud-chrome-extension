@@ -690,23 +690,23 @@
   }
 
   function wrapSingleGroups() {
-    var rowWithoutSector = document.getElementById('plan-container').querySelector('[id*="add_sector"]');
-    var sectors;
+    var rowWithoutSector = document.getElementById('plan-container').querySelectorAll('[id*="add_sector"]');
+    var seatsWithoutRow = document.getElementById('plan-container').querySelectorAll('[id*="add_row"]');
     var id;
 
-    if (rowWithoutSector) {
-      id = rowWithoutSector.getAttribute('id').replace(/\s?add_sector\s?/, '');
-      rowWithoutSector.setAttribute('id', id);
-      id = id.replace(/\s?sector_shape\s?/, '');
-      wrapNodeWithGroup(rowWithoutSector).setAttribute('id', id);
-    } else {
-      sectors = document.getElementById('plan-container').children;
-      Array.prototype.forEach.call(sectors, function(sector) {
-        var title = sector.getAttribute('id');
-        if (/_addrow/.test(title)) {
-          wrapChildrenWithGroup(sector);
-          sector.setAttribute('id', title.replace('_addrow', ''));
-        }
+    if (rowWithoutSector.length) {
+      Array.prototype.forEach.call(rowWithoutSector, function(row) {
+        id = row.getAttribute('id').replace(/(\s|_)?add_sector(\s|_)?/, '');
+        row.removeAttribute('id');
+        id = id.replace(/(\s|_)?sector_shape(\s|_)?/, '');
+        wrapNodeWithGroup(row).setAttribute('id', id);
+      });
+    }
+
+    if (seatsWithoutRow.length) {
+      Array.prototype.forEach.call(seatsWithoutRow, function(seat) {
+        seat.removeAttribute('id');
+        wrapNodeWithGroup(seat);
       });
     }
   }
