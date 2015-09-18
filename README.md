@@ -1,3 +1,12 @@
+### 0.5.0
+- "wrap_rows" attribute wraps all rows to sector group. Use when there's only one sector on plan  
+
+### 0.4.1
+- keep id="sector_shape" on sector shape
+
+### 0.4.0
+- refactored automated group wrapping using "add_sector" and "add_row" attributes in complex cases of Corel Draw 
+
 ### 0.3.2
 - remove Id attribute tags on save, fill stand up sectors with lightgrey color
 

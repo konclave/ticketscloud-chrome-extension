@@ -690,6 +690,7 @@
   }
 
   function wrapSingleGroups() {
+    var wrapRow = document.getElementById('plan-container').querySelectorAll('[id*="wrap_rows"]');
     var rowWithoutSector = document.getElementById('plan-container').querySelectorAll('[id*="add_sector"]');
     var seatsWithoutRow = document.getElementById('plan-container').querySelectorAll('[id*="add_row"]');
     var id;
@@ -698,6 +699,10 @@
       Array.prototype.forEach.call(rowWithoutSector, function(row) {
         id = row.getAttribute('id').replace(/(\s|_)?add_sector(\s|_)?/, '');
         row.removeAttribute('id');
+        if (/(\s|_)?sector_shape(\s|_)?/.test(id)) {
+          row.setAttribute('id', 'sector_shape');
+        }
+
         id = id.replace(/(\s|_)?sector_shape(\s|_)?/, '');
         wrapNodeWithGroup(row).setAttribute('id', id);
       });
@@ -708,6 +713,13 @@
         seat.removeAttribute('id');
         wrapNodeWithGroup(seat);
       });
+    }
+
+    if (wrapRow.length) {
+      var title = wrapRow[0].getAttribute('id');
+      wrapRow[0].removeAttribute('id');
+      title = title.replace(/(\s|_)?wrap_rows(\s|_)?/, '');
+      wrapChildrenWithGroup(wrapRow[0].parentNode).setAttribute('id', title);
     }
   }
 
