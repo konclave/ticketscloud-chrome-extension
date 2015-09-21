@@ -661,9 +661,10 @@
     Array.prototype.forEach.call(sectors, function(sector) {
       var sectorId = sector.getAttribute('id');
       if (sectorId) {
-        sector.setAttribute('tc-sector-name', sectorId.replace(/_(x(\d|[a|b|c|d|e]){4})_/g, function() {
+        sectorId = sectorId.replace(/_(x(\d|[a|b|c|d|e]){4})_/g, function() {
           return String.fromCharCode('0' + arguments[1]);
-        }).replace('-', ' '));
+        }).replace('-', ' ').trim();
+        sector.setAttribute('tc-sector-name', sectorId);
       }
     });
   }
@@ -697,13 +698,13 @@
 
     if (rowWithoutSector.length) {
       Array.prototype.forEach.call(rowWithoutSector, function(row) {
-        id = row.getAttribute('id').replace(/(\s|_)?add_sector(\s|_)?/, '');
+        id = row.getAttribute('id').replace(/\s?add_sector\s?/, '');
         row.removeAttribute('id');
-        if (/(\s|_)?sector_shape(\s|_)?/.test(id)) {
+        if (/\s?sector_shape\s?/.test(id)) {
           row.setAttribute('id', 'sector_shape');
         }
 
-        id = id.replace(/(\s|_)?sector_shape(\s|_)?/, '');
+        id = id.replace(/\s?sector_shape\s?/, '');
         wrapNodeWithGroup(row).setAttribute('id', id);
       });
     }
@@ -718,7 +719,7 @@
     if (wrapRow.length) {
       var title = wrapRow[0].getAttribute('id');
       wrapRow[0].removeAttribute('id');
-      title = title.replace(/(\s|_)?wrap_rows(\s|_)?/, '');
+      title = title.replace(/\s?wrap_rows\s?/, '');
       wrapChildrenWithGroup(wrapRow[0].parentNode).setAttribute('id', title);
     }
   }
