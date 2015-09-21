@@ -1,3 +1,7 @@
+### 0.5.1
+- replace attributes underscore bugfix
+- trim sector names
+
 ### 0.5.0
 - "wrap_rows" attribute wraps all rows to sector group. Use when there's only one sector on plan  
 
