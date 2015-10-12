@@ -388,7 +388,7 @@
     var seats;
     var styles;
 
-    for (var i = 0; i <= 10; i++) {
+    for (var i = 0; i <= 100; i++) {
       try {
 
         fntRegExp = new RegExp('\\\.fnt' + i + '.+font-size:(\\d+)');
