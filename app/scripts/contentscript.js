@@ -171,6 +171,7 @@
 
   function postProcess(svg) {
     flattenStyles(svg);
+    removeClasses(svg);
     removeIdTags(svg);
     sortNodes(svg);
   }
@@ -385,7 +386,6 @@
     var fntRegExp;
     var strokeRegExp;
     var strokeWidthRegExp;
-    var seats;
     var styles;
 
     for (var i = 0; i <= 100; i++) {
@@ -415,8 +415,10 @@
         window.console.log('not found style fnt' + i);
       }
     }
+  }
 
-    seats = svg.querySelector('#plan-container').querySelectorAll('circle, path, polygon');
+  function removeClasses(svg) {
+    var seats = svg.querySelector('#plan-container').querySelectorAll('circle, path, polygon');
     if (seats) {
       Array.prototype.forEach.call(seats, function(seat) {
         seat.removeAttribute('class');
@@ -738,6 +740,7 @@
     convertPaths();
     sortNodes(svg);
     setSectorName();
+    flattenStyles(svg);
 
     return true;
   }

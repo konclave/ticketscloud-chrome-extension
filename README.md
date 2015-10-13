@@ -1,3 +1,9 @@
+### 0.5.3
+- normalize font-size on map load
+
+### 0.5.2
+- styles classes modification iteration parameter increased to 100 
+
 ### 0.5.1
 - replace attributes underscore bugfix
 - trim sector names
