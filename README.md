@@ -1,3 +1,6 @@
+### 0.5.4
+- remove classes from stand up sector drawn with 'rect'
+
 ### 0.5.3
 - normalize font-size on map load
 

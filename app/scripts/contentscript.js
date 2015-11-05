@@ -418,7 +418,7 @@
   }
 
   function removeClasses(svg) {
-    var seats = svg.querySelector('#plan-container').querySelectorAll('circle, path, polygon');
+    var seats = svg.querySelector('#plan-container').querySelectorAll('circle, path, polygon, rect');
     if (seats) {
       Array.prototype.forEach.call(seats, function(seat) {
         seat.removeAttribute('class');
