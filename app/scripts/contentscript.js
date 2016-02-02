@@ -5,7 +5,7 @@
 
   function setSeatNumbers() {
     var seats = document.querySelectorAll('circle');
-    Array.prototype.map.call(seats, function(seat) {
+    Array.prototype.forEach.call(seats, function(seat) {
       var num = seat.getAttribute('tc-seat-no');
       var text;
       if (num) {
@@ -24,14 +24,19 @@
 
   function setRowNumbers() {
     var rows = document.querySelectorAll('[tc-row-no]');
-    Array.prototype.map.call(rows, function(row) {
+    Array.prototype.forEach.call(rows, function(row) {
       var num = row.getAttribute('tc-row-no');
-      var firstSeat = row.querySelector('circle');
+      var seats = row.querySelectorAll('circle');
+      var firstSeat = seats[0];
+      var coords = {
+        x: firstSeat.getAttribute('cx') * 1 + (firstSeat.getAttribute('r') * 3 * (isReverse(seats) ? -1 : 1)),
+        y: firstSeat.getAttribute('cy') * 1 + firstSeat.getAttribute('r') / 2
+      };
       var text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
       if (firstSeat) {
         text.innerHTML = num;
-        text.setAttribute('x', firstSeat.getAttribute('cx') * 1 + firstSeat.getAttribute('r') * 2);
-        text.setAttribute('y', firstSeat.getAttribute('cy') * 1 + firstSeat.getAttribute('r') / 2);
+        text.setAttribute('x', coords.x);
+        text.setAttribute('y', coords.y);
         text.setAttribute('fill', 'blue');
         text.setAttribute('font-size', firstSeat.getAttribute('r') * 2);
         text.setAttribute('class', 'temporary');
@@ -40,14 +45,28 @@
     });
   }
 
+  function isReverse(seats) {
+    if (seats.length && seats.length > 1) {
+      var seatLeftNo = seats[0].getAttribute('tc-seat-no');
+      var seatRightNo = seats[1].getAttribute('tc-seat-no');
+      return !!(seatLeftNo && seatRightNo && (seatLeftNo * 1 < seatRightNo * 1));
+    } else {
+      return false;
+    }
+  }
+
   function setCircleActive(seat) {
-    seat.classList.add('active');
-    seat.setAttribute('fill', 'lime');
+    if (seat && seat.classList) {
+      seat.classList.add('active');
+      seat.setAttribute('fill', 'lime');
+    }
   }
 
   function setCircleInactive(seat) {
-    seat.classList.remove('active');
-    seat.removeAttribute('fill');
+    if (seat && seat.classList) {
+      seat.classList.remove('active');
+      seat.removeAttribute('fill');
+    }
   }
 
   function getNodeIdx(node) {
