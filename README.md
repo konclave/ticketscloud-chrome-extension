@@ -1,3 +1,9 @@
+### 0.5.6
+- do not overwrite saved sector name 
+
+### 0.5.5
+- set row numbers on the left of the first seat if seat number order is left to right
+
 ### 0.5.4
 - remove classes from stand up sector drawn with 'rect'
 

@@ -157,6 +157,7 @@
   function setSectorTitle(seatNode, title) {
     var sectorNode = seatNode.parentNode.parentNode;
     sectorNode.setAttribute('tc-sector-name', title);
+    sectorNode.setAttribute('id', title.replace(' ', '-'));
   }
 
   function seatsCompareSeatNoLtr(current, next) {
@@ -681,6 +682,11 @@
 
     Array.prototype.forEach.call(sectors, function(sector) {
       var sectorId = sector.getAttribute('id');
+
+      if (sector.getAttribute('tc-sector-name')) {
+        return;
+      }
+
       if (sectorId) {
         sectorId = sectorId.replace(/_(x(\d|[a|b|c|d|e]){4})_/g, function() {
           return String.fromCharCode('0' + arguments[1]);
@@ -712,10 +718,17 @@
   }
 
   function wrapSingleGroups() {
-    var wrapRow = document.getElementById('plan-container').querySelectorAll('[id*="wrap_rows"]');
-    var rowWithoutSector = document.getElementById('plan-container').querySelectorAll('[id*="add_sector"]');
-    var seatsWithoutRow = document.getElementById('plan-container').querySelectorAll('[id*="add_row"]');
+    var planContainer = document.getElementById('plan-container');
+    var wrapRow;
+    var rowWithoutSector;
+    var seatsWithoutRow;
     var id;
+
+    if (!planContainer) return;
+
+    wrapRow = planContainer.querySelectorAll('[id*="wrap_rows"]');
+    rowWithoutSector = planContainer.querySelectorAll('[id*="add_sector"]');
+    seatsWithoutRow = planContainer.querySelectorAll('[id*="add_row"]');
 
     if (rowWithoutSector.length) {
       Array.prototype.forEach.call(rowWithoutSector, function(row) {
@@ -745,11 +758,56 @@
     }
   }
 
+  function applyTranslate(element, translate) {
+    switch (element.tagName) {
+      case 'circle':
+        element.setAttribute('cx', element.getAttribute('cx') * 1 + translate.x * 1);
+        break;
+      default:
+    }
+  }
+
+  function extractChildren(element) {
+    if (element.getAttribute('tc-row') || element.getAttribute('data-tc-row')) {
+      element.removeAttribute('transform');
+      return;
+    }
+
+    for (var i = element.children.length - 1; i >= 0; i--) {
+      element.parentNode.appendChild(element.children[i]);
+    }
+
+    element.parentNode.removeChild(element);
+  }
+
+  function flattenTransform(element) {
+    var transform = element.getAttribute('transform');
+
+    if (transform) {
+      var translate = transform.match(/translate\((\d+\.?\d+?)\)/);
+      if (element.tagName === 'g') {
+        Array.prototype.forEach.call(element.children, function(child) {
+          applyTranslate(child, {x: translate[1]});
+        });
+
+        extractChildren(element);
+      }
+    }
+  }
+
+  function flattenTransforms(svg) {
+    var groups = svg.querySelectorAll('g[transform]');
+    Array.prototype.forEach.call(groups, function(group) {
+      flattenTransform(group);
+    });
+  }
+
   function preprocess() {
     var svg = document.querySelector('svg');
 
     cleanMeta();
     wrapSingleGroups();
+    // flattenTransforms(svg);
 
     if (!checkStructure()) {
       return false;
