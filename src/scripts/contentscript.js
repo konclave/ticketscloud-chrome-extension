@@ -1,4 +1,5 @@
 import * as process from './process.js';
+import * as utils from './utils.js';
 
 function setSeatNumbers() {
   const seats = document.querySelectorAll('circle');
@@ -184,53 +185,6 @@ function postProcess(svg) {
   process.sortNodes(svg);
 }
 
-function printError() {
-  var svg = document.querySelector('svg');
-  var error = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-  var g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-  var texts = [];
-
-  error.setAttribute('x', 20);
-  error.setAttribute('y', 20);
-  error.setAttribute('fill', 'tomato');
-  error.setAttribute('stroke', 'red');
-  error.setAttribute('width', svg.getBBox().width / 7);
-  error.setAttribute('height', svg.getBBox().height / 20);
-  g.appendChild(error);
-
-  if (arguments.length) {
-    Array.prototype.forEach.call(arguments, function(attr) {
-      var text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-      text.setAttribute('font-size', error.getAttribute('height') / 4);
-      text.setAttribute('fill', 'black');
-      text.setAttribute('x', error.getAttribute('width') / 20);
-
-      if (typeof attr === 'string') {
-        text.innerHTML = attr;
-      } else if (typeof attr === 'object') {
-        text.innerHTML = JSON.stringify(attr);
-      }
-
-      texts.push(text);
-    });
-  }
-
-  texts.forEach(function(text) {
-    g.appendChild(text);
-  });
-
-  svg.appendChild(g);
-
-  texts.forEach(function(text, idx) {
-    var width = text.getBBox().width;
-    if ((width + error.getAttribute('width') / 20 * 2) > error.getAttribute('width')) {
-      error.setAttribute('width', (width + error.getAttribute('width') / 20 * 2));
-    }
-
-    text.setAttribute('y', text.getBBox().height * (idx + 1) + error.getAttribute('height') / 20);
-  });
-}
-
 function isSectorBroken(sector) {
   if (sector.tagName !== 'g') {
     return 'Неверный элемент вместо группы на уровне сектора';
@@ -289,7 +243,7 @@ function checkStructure(svg) {
   if (isOK.error) {
     const error = isOK.error;
     delete isOK.error;
-    printError(error, isOK);
+    utils.printError(error, isOK);
     return false;
   }
   return true;
