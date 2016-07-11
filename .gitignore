@@ -1,3 +1,4 @@
 .idea
 node_modules
 app/ticketscloud-chrome-extension-*.zip
+app/scripts/contentscript.js
