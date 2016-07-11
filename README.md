@@ -1,5 +1,5 @@
 ### 0.5.6
-- do not overwrite saved sector name 
+- do not drop saved sector name when already processed file was loaded 
 
 ### 0.5.5
 - set row numbers on the left of the first seat if seat number order is left to right

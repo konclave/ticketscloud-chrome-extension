@@ -1,0 +1,19 @@
+{
+  "env": {
+    "browser": true
+  },
+  "extends": "airbnb-base",
+
+  "rules": {
+    "wrap-iife": [2 ,"inside"],
+    "max-len": [2, {
+      "code": 120,
+      "ignoreComments": true
+    }],
+    "func-names": 0,
+    "space-before-function-paren": 0,
+    "no-param-reassign": 0,
+    "no-use-before-define": [2 , {"functions": false}],
+    "object-curly-spacing": [2, "never"]
+  }
+}
