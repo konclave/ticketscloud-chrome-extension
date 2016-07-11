@@ -16,6 +16,7 @@
   },
   "scripts": {
     "test": "./node_modules/eslint/bin/eslint.js src/scripts/*.js",
-    "webpack": "webpack --progress --color --display-error-details"
+    "webpack": "webpack --progress --color --display-error-details",
+    "webpack:watch": "webpack --progress --color --display-error-details --watch"
   }
 }
