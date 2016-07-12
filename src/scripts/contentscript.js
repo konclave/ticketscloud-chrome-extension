@@ -1,6 +1,6 @@
-import * as process from './process.js';
-import * as utils from './utils.js';
-import * as complex from './complex.js';
+import * as process from './process';
+import * as utils from './utils';
+import {ComplexPlan, isComplexPlan} from './complex';
 
 function setSeatNumbers() {
   const seats = document.querySelectorAll('circle');
@@ -405,21 +405,11 @@ function zoomOut(svg) {
   svg.setAttribute('width', `${next}%`);
 }
 
-function init() {
-  const svg = document.querySelector('svg');
-
-  if (!svg) return;
-
-  if (complex.isComplexPlan(svg)) {
-
-  }
-
-  if (preprocess()) {
-    setSeatNumbers();
-    setRowNumbers();
-    attachEvents(svg);
-  }
-
+/**
+ * creates HTML page and append svg node to body
+ * @param svg {Element}
+ */
+function appendSVG(svg) {
   const html = document.createElementNS('http://www.w3.org/1999/xhtml', 'html');
   const body = document.createElementNS('http://www.w3.org/1999/xhtml', 'body');
 
@@ -429,6 +419,25 @@ function init() {
   document.appendChild(html);
 
   window.chrome.runtime.onMessage.addListener(onMessageCallback);
+}
+
+function init() {
+  const svg = document.querySelector('svg');
+
+  if (!svg) return;
+
+  if (isComplexPlan(svg)) {
+    const complexPlan = new ComplexPlan(svg);
+    console.log(complexPlan.svg);
+    appendSVG(complexPlan.svg);
+  } else {
+    if (preprocess()) {
+      setSeatNumbers();
+      setRowNumbers();
+      attachEvents(svg);
+    }
+    appendSVG(svg);
+  }
 }
 
 init();

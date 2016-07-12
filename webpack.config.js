@@ -7,6 +7,10 @@ module.exports = {
     path: `${__dirname}/app/scripts`,
     filename: '[name].js'
   },
+  resolve: {
+    modulesDirectories: ['src/scripts', 'src/styles'],
+    extensions: ['', '.js', '.css']
+  },
   module: {
     loaders: [
       {

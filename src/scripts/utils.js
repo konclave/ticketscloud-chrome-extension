@@ -54,6 +54,18 @@ function setErrorWidth(error) {
   };
 }
 
+/**
+ * Cleans unicode sequences from id attribute string and converts them to chars, replaces dashes with spaces
+ * @param id {string}
+ * @returns {string}
+ */
+function cleanId (id) {
+  const symbolsRegEx = /_(x(\d|[a|b|c|d|e]){4})_/g;
+  id = id.replace(symbolsRegEx, (...args) => String.fromCharCode(`0${args[1]}`));
+  return id.replace('-', ' ').trim();
+}
+
 export default {
   printError,
+  cleanId
 };
