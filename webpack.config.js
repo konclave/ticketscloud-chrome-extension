@@ -1,6 +1,7 @@
 module.exports = {
   entry: {
-    contentscript: `${__dirname}/src/scripts/contentscript.js`
+    contentscript: `${__dirname}/src/scripts/contentscript.js`,
+    popup: `${__dirname}/src/scripts/popup.js`
   },
   output: {
     path: `${__dirname}/app/scripts`,
@@ -16,4 +17,4 @@ module.exports = {
     ]
   },
   devtools: 'source-map'
-}
+};
