@@ -82,22 +82,22 @@ fieldset > div {
   margin: .5em 0;
 }
 
-button[tabindex="5"] {
+#cbcopy {
   background: #76d086;
 }
 
-button[tabindex="5"]:hover,
-button[tabindex="5"]:focus
+#cbcopy:hover,
+#cbcopy:focus
 {
   background: #89d797;
 }
-button[tabindex="5"]:active
+#cbcopy:active
 {
   background: #40ba55;
 }
-button[tabindex="5"][disabled]:hover,
-button[tabindex="5"][disabled]:focus,
-button[tabindex="5"][disabled]:active
+#cbcopy[disabled]:hover,
+#cbcopy[disabled]:focus,
+#cbcopy[disabled]:active
 {
   background-color: #76d086;
 }
@@ -117,4 +117,8 @@ p {
 
 .zoom-controls {
     text-align: center;
+}
+
+.hidden {
+    display: none;
 }

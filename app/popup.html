@@ -6,12 +6,12 @@
 <body>
 <form action="">
     <fieldset>
-        <div>
+        <div class="simple">
             <label>Номер места</label>
             <input type="text" name="" id="seat" tabindex="1"/>
             <p>(выбрано: <span id="len"></span>)</p>
         </div>
-        <div>
+        <div class="simple">
             <label>Номер ряда</label>
             <input type="text" name="" id="row" tabindex="2"/>
         </div>
@@ -19,17 +19,21 @@
             <label>Название сектора</label>
             <textarea id="sector" tabindex="3"></textarea>
         </div>
-        <button id="savedata" type="button" tabindex="4">Сохранить</button>
+        <div class="complex">
+            <label>Название файла со схемой сектора</label>
+            <textarea id="link" tabindex="4"></textarea>
+        </div>
+        <button id="savedata" type="button" tabindex="5">Сохранить</button>
     </fieldset>
     <fieldset>
         <div>
-            <button id="cbcopy" type="button" tabindex="5">Копировать файл в буфер</button>
+            <button id="cbcopy" type="button" tabindex="6">Копировать файл в буфер</button>
         </div>
     </fieldset>
     <fieldset>
         <div class="zoom-controls">
-            <button id="zoomin" type="button" tabindex="6" class="btn btn_zoom">+</button>
-            <button id="zoomout" type="button" tabindex="7" class="btn btn_zoom">-</button>
+            <button id="zoomin" type="button" tabindex="7" class="btn btn_zoom">+</button>
+            <button id="zoomout" type="button" tabindex="8" class="btn btn_zoom">-</button>
         </div>
     </fieldset>
 </form>

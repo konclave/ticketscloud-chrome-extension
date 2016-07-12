@@ -2,6 +2,8 @@ import * as process from './process';
 import * as utils from './utils';
 import {ComplexPlan, isComplexPlan} from './complex';
 
+let complexPlan;
+
 function setSeatNumbers() {
   const seats = document.querySelectorAll('circle');
   Array.prototype.forEach.call(seats, function(seat) {
@@ -358,6 +360,8 @@ function onMessageCallback(msg, sender, response) {
       if (msg.subject.sector) {
         setSectorTitle(seat.item(0), msg.subject.sector);
       }
+    } else if (msg.subject.title) {
+      complexPlan.setData(msg.subject);
     }
   }
 }
@@ -369,8 +373,13 @@ function applyAction(action, response) {
   const svgClone = svg.cloneNode(true);
 
   switch (action) {
-    case 'activeSeat':
-      if (seat.length) {
+    case 'getData':
+      if (isComplexPlan(svg)) {
+        response({
+          isComplex: true,
+          sectors: complexPlan.getSelected()
+        });
+      } else if (seat.length) {
         res.row = seat.item(0).parentNode.getAttribute('tc-row-no');
         res.sector = seat.item(0).parentNode.parentNode.getAttribute('tc-sector-name');
         res.seat = seat.length > 1 ? null : seat.item(0).getAttribute('tc-seat-no');
@@ -381,8 +390,10 @@ function applyAction(action, response) {
       }
       break;
     case 'getSVG':
-      clearTemporaryNodes(svgClone);
-      postProcess(svgClone);
+      if (!isComplexPlan(svg)) {
+        clearTemporaryNodes(svgClone);
+        postProcess(svgClone);
+      }
       response(svgClone.outerHTML);
       break;
     case 'zoomin':
@@ -427,8 +438,7 @@ function init() {
   if (!svg) return;
 
   if (isComplexPlan(svg)) {
-    const complexPlan = new ComplexPlan(svg);
-    console.log(complexPlan.svg);
+    complexPlan = new ComplexPlan(svg);
     appendSVG(complexPlan.svg);
   } else {
     if (preprocess()) {

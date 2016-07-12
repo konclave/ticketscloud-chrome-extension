@@ -52,15 +52,21 @@ function copyToClipboard(text) {
 }
 
 function attachEventHandlers() {
-  document.querySelector('#savedata').addEventListener('click', (e) => {
-    e.preventDefault();
-
-    requestContentData({
-      seat: document.getElementById('seat').value,
-      row: document.getElementById('row').value,
-      sector: document.getElementById('sector').value
-    });
-
+  document.querySelector('#savedata').addEventListener('click', () => {
+    let data;
+    if (document.querySelector('form').dataset.complex) {
+      data = {
+        title: document.querySelector('#sector').value,
+        link: document.querySelector('#link').value
+      };
+    } else {
+      data = {
+        seat: document.getElementById('seat').value,
+        row: document.getElementById('row').value,
+        sector: document.getElementById('sector').value
+      };
+    }
+    requestContentData(data);
     window.close();
   });
 
@@ -79,7 +85,29 @@ function attachEventHandlers() {
   });
 }
 
+function processData(data) {
+  if (data.isComplex) {
+    document.querySelector('form').dataset.complex = true;
+    const sectorInput = document.querySelector('#sector');
+    Array.prototype.forEach.call(document.querySelectorAll('.simple'), (node) => node.classList.add('hidden'));
+    Array.prototype.forEach.call(document.querySelectorAll('.complex'), (node) => node.classList.remove('hidden'));
+    sectorInput.focus();
+    sectorInput.select();
+
+    if (data.sectors.length === 1) {
+      document.querySelector('#sector').value = data.sectors[0].sectorTitle;
+      document.querySelector('#link').value = data.sectors[0].svgLink;
+    }
+  } else {
+    document.querySelector('form').removeAttribute('data-complex');
+    Array.prototype.forEach.call(document.querySelectorAll('.simple'), (node) => node.classList.remove('hidden'));
+    Array.prototype.forEach.call(document.querySelectorAll('.complex'), (node) => node.classList.add('hidden'));
+
+    setSectorRowSeatData(data);
+  }
+}
+
 window.addEventListener('DOMContentLoaded', () => {
-  requestContentData({action: 'activeSeat'}, setSectorRowSeatData);
+  requestContentData({action: 'getData'}, processData);
   attachEventHandlers();
 });

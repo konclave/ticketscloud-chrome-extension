@@ -59,13 +59,13 @@ function setErrorWidth(error) {
  * @param id {string}
  * @returns {string}
  */
-function cleanId (id) {
+function cleanId (id = '') {
   const symbolsRegEx = /_(x(\d|[a|b|c|d|e]){4})_/g;
   id = id.replace(symbolsRegEx, (...args) => String.fromCharCode(`0${args[1]}`));
   return id.replace('-', ' ').trim();
 }
 
-export default {
+export {
   printError,
   cleanId
 };
