@@ -1,5 +1,6 @@
 import * as process from './process.js';
 import * as utils from './utils.js';
+import * as complex from './complex.js';
 
 function setSeatNumbers() {
   const seats = document.querySelectorAll('circle');
@@ -85,35 +86,35 @@ function selectRange(start, end) {
   }
 }
 
-function attachEvents() {
-  document.getElementById('plan-container').addEventListener('click', function(e) {
-    var seat;
-    var current;
+function attachEvents(svg) {
+  svg.getElementById('plan-container').addEventListener('click', simplePlanClickCallback);
+}
 
-    if (e.target.tagName === 'text') {
-      seat = e.target.previousSibling;
-    } else if (e.target.tagName === 'circle') {
-      seat = e.target;
-    }
+function simplePlanClickCallback(e) {
+  const current = document.querySelectorAll('.active');
+  let seat;
 
-    current = document.querySelectorAll('.active');
+  if (e.target.tagName === 'text') {
+    seat = e.target.previousSibling;
+  } else if (e.target.tagName === 'circle') {
+    seat = e.target;
+  }
 
-    if (e.shiftKey) {
-      if (current.length === 1) {
-        selectRange(current.item(0), seat);
-      } else {
-        setCircleActive(seat);
-      }
+  if (e.shiftKey) {
+    if (current.length === 1) {
+      selectRange(current.item(0), seat);
     } else {
-      if (current.length) {
-        Array.prototype.map.call(current, setCircleInactive);
-      }
-
-      if (current.item(0) !== seat) {
-        setCircleActive(seat);
-      }
+      setCircleActive(seat);
     }
-  });
+  } else {
+    if (current.length) {
+      Array.prototype.map.call(current, setCircleInactive);
+    }
+
+    if (current.item(0) !== seat) {
+      setCircleActive(seat);
+    }
+  }
 }
 
 function setSeatNo(seat, idx) {
@@ -227,14 +228,14 @@ function isPlanCorrect(container) {
     return {error: 'Нет общей группы с id="plan-container"'};
   }
 
-  var sectors = container.children;
-  var coord = {};
+  const sectors = container.children;
+  const coord = {};
 
   if (Array.prototype.some.call(sectors, testSector(coord))) {
     return coord;
-  } else {
-    return true;
   }
+
+  return true;
 }
 
 function checkStructure(svg) {
@@ -378,10 +379,15 @@ function init() {
   const svg = document.querySelector('svg');
 
   if (!svg) return;
+
+  if (complex.isComplexPlan(svg)) {
+
+  }
+
   if (preprocess()) {
     setSeatNumbers();
     setRowNumbers();
-    attachEvents();
+    attachEvents(svg);
   }
 
   const html = document.createElementNS('http://www.w3.org/1999/xhtml', 'html');
