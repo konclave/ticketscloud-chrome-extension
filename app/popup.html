@@ -1,48 +1,38 @@
 <!doctype html>
 <html>
-  <head>
+<head>
     <meta charset="utf-8">
-    <!-- build:css styles/vendor.css -->
-    <!-- bower:css -->
-    <!-- endbower -->
-    <!-- endbuild -->
-    <!-- build:css styles/main.css -->
-    <link href="styles/main.css" rel="stylesheet">
-    <!-- endbuild -->
-  </head>
-  <body>
-  <form action="">
+</head>
+<body>
+<form action="">
     <fieldset>
-      <div>
-        <label>Номер места</label>
-        <input type="text" name="" id="seat" tabindex="1"/>
-        <p>(выбрано: <span id="len"></span>)</p>
-      </div>
-      <div>
-      <label>Номер ряда</label>
-      <input type="text" name="" id="row" tabindex="2"/>
-      </div>
-      <div>
-        <label>Название сектора</label>
-        <textarea id="sector" tabindex="3"></textarea>
-      </div>
-      <button id="savedata" type="button" tabindex="4">Сохранить</button>
+        <div>
+            <label>Номер места</label>
+            <input type="text" name="" id="seat" tabindex="1"/>
+            <p>(выбрано: <span id="len"></span>)</p>
+        </div>
+        <div>
+            <label>Номер ряда</label>
+            <input type="text" name="" id="row" tabindex="2"/>
+        </div>
+        <div>
+            <label>Название сектора</label>
+            <textarea id="sector" tabindex="3"></textarea>
+        </div>
+        <button id="savedata" type="button" tabindex="4">Сохранить</button>
     </fieldset>
     <fieldset>
-      <div>
-        <button id="cbcopy" type="button" tabindex="5">Копировать файл в буфер</button>
-      </div>
+        <div>
+            <button id="cbcopy" type="button" tabindex="5">Копировать файл в буфер</button>
+        </div>
     </fieldset>
-  </form>
-
-    <!-- build:js scripts/vendor.js -->
-    <!-- bower:js -->
-    <!-- endbower -->
-    <!-- endbuild -->
-
-    <!-- build:js scripts/popup.js -->
-
-    <script src="scripts/popup.js"></script>
-    <!-- endbuild -->
-  </body>
+    <fieldset>
+        <div class="zoom-controls">
+            <button id="zoomin" type="button" tabindex="6" class="btn btn_zoom">+</button>
+            <button id="zoomout" type="button" tabindex="7" class="btn btn_zoom">-</button>
+        </div>
+    </fieldset>
+</form>
+<script src="scripts/popup.js"></script>
+</body>
 </html>

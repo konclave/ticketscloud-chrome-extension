@@ -107,3 +107,14 @@ p {
   margin: 0;
   padding: 0;
 }
+
+.btn_zoom {
+    display: inline-block;
+    width: auto;
+    background-color: darkslategrey;
+    color: white;
+}
+
+.zoom-controls {
+    text-align: center;
+}

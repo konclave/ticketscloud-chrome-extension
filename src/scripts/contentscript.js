@@ -74,7 +74,7 @@ function getNodeIdx(node) {
 
 function selectRange(start, end) {
   if (start.parentNode !== end.parentNode) {
-    return false;
+    return;
   }
 
   var startIdx = getNodeIdx(start);
@@ -184,6 +184,7 @@ function postProcess(svg) {
   process.removeClasses(svg);
   process.removeIdTags(svg);
   process.sortNodes(svg);
+  process.setWidthHeight(svg);
 }
 
 function isSectorBroken(sector) {
@@ -336,21 +337,12 @@ function preprocess() {
 }
 
 function onMessageCallback(msg, sender, response) {
-  const res = {};
-
   if (msg.from === 'popup') {
-    const seat = document.querySelectorAll('.active');
-    if (msg.subject.action === 'activeSeat') {
-      if (seat.length) {
-        res.row = seat.item(0).parentNode.getAttribute('tc-row-no');
-        res.sector = seat.item(0).parentNode.parentNode.getAttribute('tc-sector-name');
-        res.seat = seat.length > 1 ? null : seat.item(0).getAttribute('tc-seat-no');
-        res.range = seat.length;
-        response(res);
-      } else {
-        response(null);
-      }
+    if (msg.subject.action) {
+      applyAction(msg.subject.action, response);
     } else if (msg.subject.seat || msg.subject.row || msg.subject.sector) {
+      const seat = document.querySelectorAll('.active');
+
       if (msg.subject.seat && seat.length) {
         if (/:/.test(msg.subject.seat)) {
           changeRange(msg.subject.seat, msg.subject.row);
@@ -366,13 +358,51 @@ function onMessageCallback(msg, sender, response) {
       if (msg.subject.sector) {
         setSectorTitle(seat.item(0), msg.subject.sector);
       }
-    } else if (msg.subject.action === 'getSVG') {
-      const svg = document.querySelector('svg').cloneNode(true);
-      clearTemporaryNodes(svg);
-      postProcess(svg);
-      response(svg.outerHTML);
     }
   }
+}
+
+function applyAction(action, response) {
+  const res = {};
+  const seat = document.querySelectorAll('.active');
+  const svg = document.querySelector('svg');
+  const svgClone = svg.cloneNode(true);
+
+  switch (action) {
+    case 'activeSeat':
+      if (seat.length) {
+        res.row = seat.item(0).parentNode.getAttribute('tc-row-no');
+        res.sector = seat.item(0).parentNode.parentNode.getAttribute('tc-sector-name');
+        res.seat = seat.length > 1 ? null : seat.item(0).getAttribute('tc-seat-no');
+        res.range = seat.length;
+        response(res);
+      } else {
+        response(null);
+      }
+      break;
+    case 'getSVG':
+      clearTemporaryNodes(svgClone);
+      postProcess(svgClone);
+      response(svgClone.outerHTML);
+      break;
+    case 'zoomin':
+      zoomIn(svg);
+      break;
+    case 'zoomout':
+      zoomOut(svg);
+      break;
+    default:
+  }
+}
+
+function zoomIn(svg) {
+  svg.setAttribute('width', `${parseInt(svg.getAttribute('width'), 10) + 10}%`);
+}
+
+function zoomOut(svg) {
+  const current = parseInt(svg.getAttribute('width'), 10);
+  const next = current === 100 ? current : current - 10;
+  svg.setAttribute('width', `${next}%`);
 }
 
 function init() {

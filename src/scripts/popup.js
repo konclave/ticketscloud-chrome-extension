@@ -1,5 +1,7 @@
+import '../styles/main.css';
+
 function requestContentData(params, callback) {
-  window.chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+  window.chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
     if (callback) {
       window.chrome.tabs.sendMessage(
         tabs[0].id,
@@ -35,7 +37,8 @@ function setSectorRowSeatData(obj) {
     document.querySelector('#savedata').setAttribute('disabled', true);
   }
 
-  seatInput.focus().select();
+  seatInput.focus();
+  seatInput.select();
 }
 
 function copyToClipboard(text) {
@@ -48,11 +51,8 @@ function copyToClipboard(text) {
   document.body.removeChild(copyDiv);
 }
 
-window.addEventListener('DOMContentLoaded', function() {
-
-  requestContentData({action: 'activeSeat'}, setSectorRowSeatData);
-
-  document.querySelector('#savedata').addEventListener('click', function(e) {
+function attachEventHandlers() {
+  document.querySelector('#savedata').addEventListener('click', (e) => {
     e.preventDefault();
 
     requestContentData({
@@ -64,9 +64,22 @@ window.addEventListener('DOMContentLoaded', function() {
     window.close();
   });
 
-  document.getElementById('cbcopy').addEventListener('click', function(e) {
+  document.getElementById('cbcopy').addEventListener('click', (e) => {
     e.preventDefault();
     e.target.style.background = 'tomato';
     requestContentData({action: 'getSVG'}, copyToClipboard);
   });
+
+  document.querySelector('#zoomin').addEventListener('click', () => {
+    requestContentData({action: 'zoomin'});
+  });
+
+  document.querySelector('#zoomout').addEventListener('click', () => {
+    requestContentData({action: 'zoomout'});
+  });
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  requestContentData({action: 'activeSeat'}, setSectorRowSeatData);
+  attachEventHandlers();
 });

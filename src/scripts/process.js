@@ -360,9 +360,9 @@ function setInlineStrokeWidth(strokeWidth) {
 }
 
 function setSectorName(svg) {
-  var sectors = svg.getElementById('plan-container').children;
+  const sectors = svg.getElementById('plan-container').children;
 
-  Array.prototype.forEach.call(sectors, function(sector) {
+  Array.prototype.forEach.call(sectors, (sector) => {
     let sectorId = sector.getAttribute('id');
 
     if (sector.getAttribute('tc-sector-name')) {
@@ -370,12 +370,19 @@ function setSectorName(svg) {
     }
 
     if (sectorId) {
-      sectorId = sectorId.replace(/_(x(\d|[a|b|c|d|e]){4})_/g, function() {
-        return String.fromCharCode('0' + arguments[1]);
-      }).replace('-', ' ').trim();
+      const symbolsRegEx = /_(x(\d|[a|b|c|d|e]){4})_/g;
+
+      sectorId = sectorId.replace(symbolsRegEx, (...args) => String.fromCharCode(`0${args[1]}`));
+      sectorId = sectorId.replace('-', ' ').trim();
+
       sector.setAttribute('tc-sector-name', sectorId);
     }
   });
+}
+
+function setWidthHeight(svg) {
+  svg.setAttribute('width', '100%');
+  svg.setAttribute('height', '100%');
 }
 
 export {
@@ -388,4 +395,5 @@ export {
   setSectorName,
   removeClasses,
   removeIdTags,
+  setWidthHeight
 };
