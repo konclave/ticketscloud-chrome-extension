@@ -365,12 +365,7 @@ function setSectorName(svg) {
   const sectors = svg.getElementById('plan-container').children;
 
   Array.prototype.forEach.call(sectors, (sector) => {
-    let sectorId = sector.getAttribute('id');
-
-    if (sector.getAttribute('tc-sector-name')) {
-      return;
-    }
-
+    const sectorId = sector.getAttribute('id');
     if (sectorId) {
       sector.setAttribute('tc-sector-name', utils.cleanId(sectorId));
     }

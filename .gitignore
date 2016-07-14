@@ -2,3 +2,4 @@
 node_modules
 app/ticketscloud-chrome-extension-*.zip
 app/scripts/contentscript.js
+app/scripts/popup.js

@@ -1,5 +1,10 @@
+### 0.6.0
+- zoom buttons in the popup to scale svg
+- select seat number field content on popup open
+- complex sector plan editing
+
 ### 0.5.6
-- do not drop saved sector name when already processed file was loaded 
+- do not drop saved sector name when already processed file was loaded
 
 ### 0.5.5
 - set row numbers on the left of the first seat if seat number order is left to right
@@ -11,20 +16,20 @@
 - normalize font-size on map load
 
 ### 0.5.2
-- styles classes modification iteration parameter increased to 100 
+- styles classes modification iteration parameter increased to 100
 
 ### 0.5.1
 - replace attributes underscore bugfix
 - trim sector names
 
 ### 0.5.0
-- "wrap_rows" attribute wraps all rows to sector group. Use when there's only one sector on plan  
+- "wrap_rows" attribute wraps all rows to sector group. Use when there's only one sector on plan
 
 ### 0.4.1
 - keep id="sector_shape" on sector shape
 
 ### 0.4.0
-- refactored automated group wrapping using "add_sector" and "add_row" attributes in complex cases of Corel Draw 
+- refactored automated group wrapping using "add_sector" and "add_row" attributes in complex cases of Corel Draw
 
 ### 0.3.2
 - remove Id attribute tags on save, fill stand up sectors with lightgrey color
@@ -48,8 +53,8 @@
 - Close extension popup in Save button click
 
 ### 0.0.8
-- Transform <path /> to <circle /> shape inside row groups only
-- Group on sector level with <path id="sector_shape" /> is correct structure now  
+- Transform `<path />` to `<circle />` shape inside row groups only
+- Group on sector level with `<path id="sector_shape" />` is correct structure now
 
 ### 0.0.7
 - Fixed wraping rows with sector group when a row with id="addsector" exists
