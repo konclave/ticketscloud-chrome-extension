@@ -1,3 +1,9 @@
+### 0.6.2
+- fixes attribute for complex plan parent
+
+### 0.6.1
+- always get sector name from `id` attribute even if `tc-sector-name` attribute extists
+
 ### 0.6.0
 - zoom buttons in the popup to scale svg
 - select seat number field content on popup open

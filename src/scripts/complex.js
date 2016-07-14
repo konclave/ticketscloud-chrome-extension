@@ -1,8 +1,7 @@
 import Sector from './sector';
 
 function normalize(svg) {
-  const container = svg.querySelector('#sector-container');
-  container.setAttribute('tc-main', true);
+  svg.setAttribute('main', true);
   return svg;
 }
 
