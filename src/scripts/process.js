@@ -343,8 +343,8 @@ function setInlineStrokeWidth(strokeWidth) {
   };
 }
 
-function setSectorName(svg) {
-  const sectors = svg.getElementById('plan-container').children;
+function setSectorName(container) {
+  const sectors = container.children;
 
   Array.prototype.forEach.call(sectors, (sector) => {
     const sectorId = sector.getAttribute('id');
@@ -362,6 +362,7 @@ function setWidthHeight(svg) {
 export {
   cleanMeta,
   wrapSingleGroups,
+  wrapNodeWithGroup,
   flattenStyles,
   cleanTransforms,
   convertPaths,

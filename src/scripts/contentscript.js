@@ -335,7 +335,7 @@ function preprocess() {
   process.cleanTransforms(svg);
   process.convertPaths(svg);
   process.sortNodes(svg);
-  process.setSectorName(svg);
+  process.setSectorName(svg.getElementById('plan-container'));
   process.flattenStyles(svg);
 
   return true;
