@@ -22,7 +22,6 @@ function normalize(svg) {
   process.cleanMeta(svg);
   process.flattenStyles(svg);
   wrapSingleShapes(svg);
-  process.setSectorName(svg.querySelector('#sector-container'));
   return svg;
 }
 

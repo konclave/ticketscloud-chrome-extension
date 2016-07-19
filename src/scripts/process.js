@@ -12,27 +12,36 @@ function cleanMeta(svg) {
 }
 
 function flattenStyles(svg) {
+  const styleElement = svg.getElementsByTagName('style')[0];
+  const defs = styleElement.parentNode;
+  const styles = styleElement.innerHTML;
   for (let i = 0; i <= 100; i++) {
     try {
       const fntRegExp = new RegExp(`\\\.fnt${i}.+font-size:(\\d+)`);
       const strokeRegExp = new RegExp(`\\\.str${i}.+stroke:\\\s?((#.{6})|[A-Za-z]+)(;|\\\})`);
       const strokeWidthRegExp = new RegExp(`\\\.str${i}.+stroke-width:\\\s?(\\\d+)(;|\\\})`);
-      const styles = svg.getElementsByTagName('style')[0].innerHTML;
+      const fillRegExp = new RegExp(`\\\.fil${i}.+fill:\\\s?((#.{6})|[A-Za-z]+)(;|\\\})`);
 
       if (fntRegExp.test(styles)) {
         const sectorNameFontSize = styles.match(fntRegExp)[1];
-        Array.prototype.map.call(svg.querySelectorAll(`.fnt${i}`), setInlineFont(sectorNameFontSize));
+        Array.prototype.forEach.call(svg.querySelectorAll(`.fnt${i}`), setInlineFont(sectorNameFontSize));
       }
-
       if (strokeRegExp.test(styles)) {
         const stroke = styles.match(strokeRegExp)[1];
-        Array.prototype.map.call(svg.querySelectorAll(`.str${i}`), setInlineStroke(stroke));
+        Array.prototype.forEach.call(svg.querySelectorAll(`.str${i}`), setInlineStroke(stroke));
       }
 
       if (strokeWidthRegExp.test(styles)) {
         const strokeWidth = styles.match(strokeWidthRegExp)[1];
-        Array.prototype.map.call(svg.querySelectorAll(`.str${i}`), setInlineStrokeWidth(strokeWidth));
+        Array.prototype.forEach.call(svg.querySelectorAll(`.str${i}`), setInlineStrokeWidth(strokeWidth));
       }
+
+      if (fillRegExp.test(styles)) {
+        const fill = styles.match(fillRegExp)[1];
+        Array.prototype.forEach.call(svg.querySelectorAll(`.fil${i}`), setInlineFill(fill));
+      }
+
+      defs.parentNode.removeChild(defs);
     } catch (e) {
       window.console.log(`not found style fnt${i}`);
     }
@@ -323,6 +332,14 @@ function setInlineFont(font) {
     element.setAttribute('font-family', 'Arial');
     if (font) {
       element.setAttribute('font-size', font);
+    }
+  };
+}
+
+function setInlineFill(fill) {
+  return function(element) {
+    if (fill) {
+      element.setAttribute('fill', fill);
     }
   };
 }
