@@ -192,15 +192,18 @@ function postProcess(svg) {
 function isSectorBroken(sector) {
   if (sector.tagName !== 'g') {
     return 'Неверный элемент вместо группы на уровне сектора';
-  } else if (!sector.getAttribute('id')) {
-    return 'Сектор без названия';
-  } else if (!sector.children.length) {
-    return 'Пустой сектор';
-  } else if (sector.querySelectorAll('g').length !== sector.children.length && !sector.querySelector('[id*="sector_shape"]')) {
-    return 'Неверный элемент вместо группы на уровне рядов';
-  } else {
-    return false;
   }
+  if (!sector.getAttribute('id')) {
+    return 'Сектор без названия';
+  }
+  if (!sector.children.length) {
+    return 'Пустой сектор';
+  }
+  if (sector.querySelectorAll('g').length !== sector.children.length && !sector.querySelector('[id*="sector_shape"]')) {
+    return 'Неверный элемент вместо группы на уровне рядов';
+  }
+
+  return false;
 }
 
 function isRowBroken(row) {
@@ -434,9 +437,7 @@ function appendSVG(svg) {
 
 function init() {
   const svg = document.querySelector('svg');
-
   if (!svg) return;
-
   if (isComplexPlan(svg)) {
     complexPlan = new ComplexPlan(svg);
     appendSVG(complexPlan.svg);

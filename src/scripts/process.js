@@ -12,79 +12,61 @@ function cleanMeta(svg) {
 }
 
 function flattenStyles(svg) {
-  var sectorNameFontSize;
-  var stroke;
-  var strokeWidth;
-  var fntRegExp;
-  var strokeRegExp;
-  var strokeWidthRegExp;
-  var styles;
-
-  for (var i = 0; i <= 100; i++) {
+  for (let i = 0; i <= 100; i++) {
     try {
-      fntRegExp = new RegExp('\\\.fnt' + i + '.+font-size:(\\d+)');
-      strokeRegExp = new RegExp('\\\.str' + i + '.+stroke:\\\s?((#.{6})|[A-Za-z]+)(;|\\\})');
-      strokeWidthRegExp = new RegExp('\\\.str' + i + '.+stroke-width:\\\s?(\\\d+)(;|\\\})');
-
-      styles = svg.getElementsByTagName('style')[0].innerHTML;
+      const fntRegExp = new RegExp(`\\\.fnt${i}.+font-size:(\\d+)`);
+      const strokeRegExp = new RegExp(`\\\.str${i}.+stroke:\\\s?((#.{6})|[A-Za-z]+)(;|\\\})`);
+      const strokeWidthRegExp = new RegExp(`\\\.str${i}.+stroke-width:\\\s?(\\\d+)(;|\\\})`);
+      const styles = svg.getElementsByTagName('style')[0].innerHTML;
 
       if (fntRegExp.test(styles)) {
-        sectorNameFontSize = styles.match(fntRegExp)[1];
-        Array.prototype.map.call(svg.querySelectorAll('.fnt' + i), setInlineFont(sectorNameFontSize));
+        const sectorNameFontSize = styles.match(fntRegExp)[1];
+        Array.prototype.map.call(svg.querySelectorAll(`.fnt${i}`), setInlineFont(sectorNameFontSize));
       }
 
       if (strokeRegExp.test(styles)) {
-        stroke = styles.match(strokeRegExp)[1];
-        Array.prototype.map.call(svg.querySelectorAll('.str' + i), setInlineStroke(stroke));
+        const stroke = styles.match(strokeRegExp)[1];
+        Array.prototype.map.call(svg.querySelectorAll(`.str${i}`), setInlineStroke(stroke));
       }
 
       if (strokeWidthRegExp.test(styles)) {
-        strokeWidth = styles.match(strokeWidthRegExp)[1];
-        Array.prototype.map.call(svg.querySelectorAll('.str' + i), setInlineStrokeWidth(strokeWidth));
+        const strokeWidth = styles.match(strokeWidthRegExp)[1];
+        Array.prototype.map.call(svg.querySelectorAll(`.str${i}`), setInlineStrokeWidth(strokeWidth));
       }
     } catch (e) {
-      window.console.log('not found style fnt' + i);
+      window.console.log(`not found style fnt${i}`);
     }
   }
 }
 
 function wrapChildrenWithGroup(node) {
-  var g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-  for (var i = 0, j = node.children.length; i < j; i++) {
+  const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+  for (let i = 0, j = node.children.length; i < j; i++) {
     g.appendChild(node.children[0]);
   }
-
-  // Array.prototype.map.call(node.children, function(seat) {
-  //   g.appendChild(seat);
-  // });
-
   node.appendChild(g);
   return g;
 }
 
 function wrapNodeWithGroup(node) {
-  var g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+  const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
   node.parentNode.insertBefore(g, node);
   g.appendChild(node);
   return g;
 }
 
 function wrapSingleGroups() {
-  var planContainer = document.getElementById('plan-container');
-  var wrapRow;
-  var rowWithoutSector;
-  var seatsWithoutRow;
-  var id;
+  const planContainer = document.getElementById('plan-container');
 
   if (!planContainer) return;
 
-  wrapRow = planContainer.querySelectorAll('[id*="wrap_rows"]');
-  rowWithoutSector = planContainer.querySelectorAll('[id*="add_sector"]');
-  seatsWithoutRow = planContainer.querySelectorAll('[id*="add_row"]');
+  const wrapRow = planContainer.querySelectorAll('[id*="wrap_rows"]');
+  const rowWithoutSector = planContainer.querySelectorAll('[id*="add_sector"]');
+  const seatsWithoutRow = planContainer.querySelectorAll('[id*="add_row"]');
 
   if (rowWithoutSector.length) {
-    Array.prototype.forEach.call(rowWithoutSector, function(row) {
-      id = row.getAttribute('id').replace(/\s?add_sector\s?/, '');
+    Array.prototype.forEach.call(rowWithoutSector, (row) => {
+      let id = row.getAttribute('id').replace(/\s?add_sector\s?/, '');
       row.removeAttribute('id');
       if (/\s?sector_shape\s?/.test(id)) {
         row.setAttribute('id', 'sector_shape');
@@ -103,7 +85,7 @@ function wrapSingleGroups() {
   }
 
   if (wrapRow.length) {
-    var title = wrapRow[0].getAttribute('id');
+    let title = wrapRow[0].getAttribute('id');
     wrapRow[0].removeAttribute('id');
     title = title.replace(/\s?wrap_rows\s?/, '');
     wrapChildrenWithGroup(wrapRow[0].parentNode).setAttribute('id', title);
