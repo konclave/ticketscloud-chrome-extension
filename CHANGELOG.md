@@ -1,3 +1,10 @@
+### 0.6.4
+- refactored id attribute magic strings process.
+
+### 0.6.3
+- add shape wrapping with `<g></g>` for coplex plans when 'add_sector' string is present in shape id
+- add fill styles flatten from `<style></style>` to elements attributes 
+
 ### 0.6.2
 - fixes attribute for complex plan parent
 

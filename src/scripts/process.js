@@ -69,10 +69,17 @@ function wrapSingleGroups() {
 
   if (!planContainer) return;
 
-  const wrapRow = planContainer.querySelectorAll('[id*="wrap_rows"]');
-  const rowWithoutSector = planContainer.querySelectorAll('[id*="add_sector"]');
   const seatsWithoutRow = planContainer.querySelectorAll('[id*="add_row"]');
+  if (seatsWithoutRow.length) {
+    Array.prototype.forEach.call(seatsWithoutRow, (seat) => {
+      const id = seat.getAttribute('id');
+      const group = wrapNodeWithGroup(seat);
+      seat.removeAttribute('id');
+      group.setAttribute('id', id.replace(/add_row/, '').trim());
+    });
+  }
 
+  const rowWithoutSector = planContainer.querySelectorAll('[id*="add_sector"]');
   if (rowWithoutSector.length) {
     Array.prototype.forEach.call(rowWithoutSector, (row) => {
       let id = row.getAttribute('id').replace(/\s?add_sector\s?/, '');
@@ -85,29 +92,15 @@ function wrapSingleGroups() {
       wrapNodeWithGroup(row).setAttribute('id', id);
     });
   }
-
-  if (seatsWithoutRow.length) {
-    Array.prototype.forEach.call(seatsWithoutRow, function(seat) {
-      seat.removeAttribute('id');
-      wrapNodeWithGroup(seat);
-    });
-  }
-
-  if (wrapRow.length) {
-    let title = wrapRow[0].getAttribute('id');
-    wrapRow[0].removeAttribute('id');
-    title = title.replace(/\s?wrap_rows\s?/, '');
-    wrapChildrenWithGroup(wrapRow[0].parentNode).setAttribute('id', title);
-  }
 }
 
 function cleanTransforms(svg) {
   const sectors = svg.getElementById('plan-container').children;
 
-  Array.prototype.forEach.call(sectors, function(sector) {
+  Array.prototype.forEach.call(sectors, (sector) => {
     const rows = sector.children;
     flattenTranslateTransform(sector);
-    Array.prototype.forEach.call(rows, function(row) {
+    Array.prototype.forEach.call(rows, (row) => {
       flattenTranslateTransform(row);
     });
   });
