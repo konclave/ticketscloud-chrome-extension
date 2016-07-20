@@ -48,15 +48,6 @@ function flattenStyles(svg) {
   }
 }
 
-function wrapChildrenWithGroup(node) {
-  const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-  for (let i = 0, j = node.children.length; i < j; i++) {
-    g.appendChild(node.children[0]);
-  }
-  node.appendChild(g);
-  return g;
-}
-
 function wrapNodeWithGroup(node) {
   const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
   node.parentNode.insertBefore(g, node);

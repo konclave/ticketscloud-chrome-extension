@@ -277,7 +277,7 @@ function testSeat(coord, sectorIdx, rowIdx) {
   };
 }
 
-function applyTranslate(element, translate) {
+/* function applyTranslate(element, translate) {
   switch (element.tagName) {
     case 'circle':
       element.setAttribute('cx', (element.getAttribute('cx') * 1) + (translate.x * 1));
@@ -297,7 +297,7 @@ function extractChildren(element) {
   }
 
   element.parentNode.removeChild(element);
-}
+} */
 
 function preprocess() {
   const svg = document.querySelector('svg');
@@ -350,7 +350,6 @@ function applyAction(action, response) {
   const res = {};
   const seat = document.querySelectorAll('.active');
   const svg = document.querySelector('svg');
-  const svgClone = svg.cloneNode(true);
 
   switch (action) {
     case 'getData':
@@ -370,11 +369,15 @@ function applyAction(action, response) {
       }
       break;
     case 'getSVG':
-      if (!isComplexPlan(svg)) {
+      if (isComplexPlan(svg)) {
+        complexPlan.deselectAll();
+        response(complexPlan.svgNode.outerHTML);
+      } else {
+        const svgClone = svg.cloneNode(true);
         clearTemporaryNodes(svgClone);
         postProcess(svgClone);
+        response(svgClone.outerHTML);
       }
-      response(svgClone.outerHTML);
       break;
     case 'zoomin':
       zoomIn(svg);

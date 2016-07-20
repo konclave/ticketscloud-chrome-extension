@@ -38,6 +38,8 @@ export class ComplexPlan {
     Array.prototype.forEach.call(sectorNodes, (node) => {
       this.sectors.push(new Sector(node));
     });
+
+    this.svgNode.addEventListener('click', this.onClick.bind(this));
   }
 
   get svg () {
@@ -53,5 +55,27 @@ export class ComplexPlan {
       sector.link = data.link;
       sector.title = data.title;
     });
+  }
+
+  deselectAll() {
+    this.getSelected().forEach((sector) => {
+      sector.deselect();
+    });
+  }
+
+  getSector(element) {
+    return this.sectors.filter((sector) => sector.element === element)[0];
+  }
+
+  onClick(e) {
+    const sector = this.getSector(e.target.parentNode);
+    if (!sector) {
+      return;
+    }
+    const isSelected = sector.isSelected;
+    this.deselectAll();
+    if (!isSelected) {
+      sector.select();
+    }
   }
 }
