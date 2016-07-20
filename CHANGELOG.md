@@ -1,3 +1,6 @@
+### 0.7.1
+- save data in popup on `enter` key press
+
 ### 0.7.0
 - set `fill` attribute in complex plan to group element around sector shapes. 
 - allow to select only one sector

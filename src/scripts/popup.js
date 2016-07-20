@@ -52,8 +52,9 @@ function copyToClipboard(text) {
 }
 
 function attachEventHandlers() {
-  document.querySelector('#savedata').addEventListener('click', () => {
+  document.querySelector('form').addEventListener('submit', (e) => {
     let data;
+    e.preventDefault();
     if (document.querySelector('form').dataset.complex) {
       data = {
         title: document.querySelector('#sector').value,

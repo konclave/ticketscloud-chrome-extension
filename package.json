@@ -1,6 +1,6 @@
 {
   "name": "tc-hall-plan",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "dependencies": {},
   "devDependencies": {
     "babel-core": "^6.10.4",
