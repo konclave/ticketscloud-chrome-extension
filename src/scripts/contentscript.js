@@ -6,11 +6,10 @@ let complexPlan;
 
 function setSeatNumbers() {
   const seats = document.querySelectorAll('circle');
-  Array.prototype.forEach.call(seats, function(seat) {
-    var num = seat.getAttribute('tc-seat-no');
-    var text;
+  Array.prototype.forEach.call(seats, (seat) => {
+    const num = seat.getAttribute('tc-seat-no');
     if (num) {
-      text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
       text.innerHTML = num;
       text.setAttribute('fill', 'white');
       text.setAttribute('font-size', seat.getAttribute('r'));
@@ -24,16 +23,16 @@ function setSeatNumbers() {
 }
 
 function setRowNumbers() {
-  var rows = document.querySelectorAll('[tc-row-no]');
-  Array.prototype.forEach.call(rows, function(row) {
-    var num = row.getAttribute('tc-row-no');
-    var seats = row.querySelectorAll('circle');
-    var firstSeat = seats[0];
-    var coords = {
-      x: firstSeat.getAttribute('cx') * 1 + (firstSeat.getAttribute('r') * 3 * (isReverse(seats) ? -1 : 1)),
-      y: firstSeat.getAttribute('cy') * 1 + firstSeat.getAttribute('r') / 2
+  const rows = document.querySelectorAll('[tc-row-no]');
+  Array.prototype.forEach.call(rows, (row) => {
+    const num = row.getAttribute('tc-row-no');
+    const seats = row.querySelectorAll('circle');
+    const firstSeat = seats[0];
+    const coords = {
+      x: (firstSeat.getAttribute('cx') * 1) + (firstSeat.getAttribute('r') * 3 * (isReverse(seats) ? -1 : 1)),
+      y: (firstSeat.getAttribute('cy') * 1) + (firstSeat.getAttribute('r') / 2)
     };
-    var text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
     if (firstSeat) {
       text.innerHTML = num;
       text.setAttribute('x', coords.x);
@@ -48,12 +47,12 @@ function setRowNumbers() {
 
 function isReverse(seats) {
   if (seats.length && seats.length > 1) {
-    var seatLeftNo = seats[0].getAttribute('tc-seat-no');
-    var seatRightNo = seats[1].getAttribute('tc-seat-no');
+    const seatLeftNo = seats[0].getAttribute('tc-seat-no');
+    const seatRightNo = seats[1].getAttribute('tc-seat-no');
     return !!(seatLeftNo && seatRightNo && (seatLeftNo * 1 < seatRightNo * 1));
-  } else {
-    return false;
   }
+
+  return false;
 }
 
 function setCircleActive(seat) {
@@ -79,11 +78,11 @@ function selectRange(start, end) {
     return;
   }
 
-  var startIdx = getNodeIdx(start);
-  var endIdx = getNodeIdx(end);
-  var row = start.parentNode.querySelectorAll('circle');
+  const startIdx = getNodeIdx(start);
+  const endIdx = getNodeIdx(end);
+  const row = start.parentNode.querySelectorAll('circle');
 
-  for (var i = Math.min(startIdx, endIdx); i <= Math.max(startIdx, endIdx); i++) {
+  for (let i = Math.min(startIdx, endIdx); i <= Math.max(startIdx, endIdx); i++) {
     setCircleActive(row.item(i));
   }
 }
@@ -125,13 +124,13 @@ function setSeatNo(seat, idx) {
 }
 
 function changeRange(range) {
-  var start = range.split(':')[0] * 1;
-  var end = range.split(':')[1] * 1;
-  var idx = start;
-  var selected = document.querySelectorAll('.active');
+  const start = range.split(':')[0] * 1;
+  const end = range.split(':')[1] * 1;
+  const selected = document.querySelectorAll('.active');
+  let idx = start;
 
   if (Math.abs(end - start) + 1 === selected.length) {
-    Array.prototype.map.call(selected, function(seat) {
+    Array.prototype.map.call(selected, (seat) => {
       setSeatNo(seat, idx);
       idx += start < end ? 1 : -1;
     });
@@ -139,46 +138,26 @@ function changeRange(range) {
 }
 
 function clearTemporaryNodes(svg) {
-  Array.prototype.forEach.call(svg.querySelectorAll('.temporary'), function(node) {
+  Array.prototype.forEach.call(svg.querySelectorAll('.temporary'), (node) => {
     node.parentNode.removeChild(node);
   });
 
-  Array.prototype.forEach.call(svg.querySelectorAll('circle'), function(node) {
+  Array.prototype.forEach.call(svg.querySelectorAll('circle'), (node) => {
     node.removeAttribute('class');
     node.removeAttribute('fill');
   });
 }
 
 function setRowNo(seatNode, idx) {
-  var rowNode = seatNode.parentNode;
-  var rowNoNode = rowNode.querySelector('[fill="blue"]');
+  const rowNode = seatNode.parentNode;
+  const rowNoNode = rowNode.querySelector('[fill="blue"]');
   rowNode.setAttribute('tc-row-no', rowNoNode.innerHTML = idx);
 }
 
 function setSectorTitle(seatNode, title) {
-  var sectorNode = seatNode.parentNode.parentNode;
+  const sectorNode = seatNode.parentNode.parentNode;
   sectorNode.setAttribute('tc-sector-name', title);
   sectorNode.setAttribute('id', title.replace(' ', '-'));
-}
-
-function seatsCompareSeatNoLtr(current, next) {
-  if (current.getAttribute('tc-seat-no') * 1 > next.getAttribute('tc-seat-no') * 1) {
-    return 1;
-  } else if (current.getAttribute('tc-seat-no') * 1 < next.getAttribute('tc-seat-no') * 1) {
-    return -1;
-  } else {
-    return 0;
-  }
-}
-
-function rowsCompareRowNo(current, next) {
-  if (current.getAttribute('tc-row-no') * 1 > next.getAttribute('tc-row-no') * 1) {
-    return 1;
-  } else if (current.getAttribute('tc-row-no') * 1 < next.getAttribute('tc-row-no') * 1) {
-    return -1;
-  } else {
-    return 0;
-  }
 }
 
 function postProcess(svg) {
@@ -215,21 +194,19 @@ function isRowBroken(row) {
     return 'Неверный элемент вместо группы на уровне ряда';
   } else if (!row.children.length) {
     return 'Пустой ряд';
-  } else {
-    return false;
   }
+
+  return false;
 }
 
 function isSeatBroken(seat) {
   if (seat.tagName !== 'circle' && seat.tagName !== 'path' && seat.tagName !== 'polygon') {
     return 'Неверный элемент на уровне места';
-  } else {
-    return false;
   }
+  return false;
 }
 
 function isPlanCorrect(container) {
-
   if (!container) {
     return {error: 'Нет общей группы с id="plan-container"'};
   }
@@ -258,38 +235,36 @@ function checkStructure(svg) {
 
 function testSector(coord) {
   return function(sector, sectorIdx) {
-    var rows;
-    var isBroken = isSectorBroken(sector);
+    const isBroken = isSectorBroken(sector);
     if (!isBroken) {
-      rows = sector.children;
+      const rows = sector.children;
       return Array.prototype.some.call(rows, testRow(coord, sectorIdx));
-    } else {
-      coord.sector = sectorIdx;
-      coord.error = isBroken;
-      return true;
     }
+
+    coord.sector = sectorIdx;
+    coord.error = isBroken;
+    return true;
   };
 }
 
 function testRow(coord, sectorIdx) {
   return function(row, rowIdx) {
-    var seats;
-    var isBroken = isRowBroken(row);
+    const isBroken = isRowBroken(row);
     if (!isBroken) {
-      seats = row.children;
+      const seats = row.children;
       return Array.prototype.some.call(seats, testSeat(coord, sectorIdx, rowIdx));
-    } else {
-      coord.sector = sectorIdx;
-      coord.row = rowIdx;
-      coord.error = isBroken;
-      return true;
     }
+
+    coord.sector = sectorIdx;
+    coord.row = rowIdx;
+    coord.error = isBroken;
+    return true;
   };
 }
 
 function testSeat(coord, sectorIdx, rowIdx) {
   return function(seat, seatIdx) {
-    var isBroken = isSeatBroken(seat);
+    const isBroken = isSeatBroken(seat);
     if (isBroken) {
       coord.sector = sectorIdx;
       coord.row = rowIdx;
@@ -297,13 +272,15 @@ function testSeat(coord, sectorIdx, rowIdx) {
       coord.error = isBroken;
       return true;
     }
+
+    return false;
   };
 }
 
 function applyTranslate(element, translate) {
   switch (element.tagName) {
     case 'circle':
-      element.setAttribute('cx', element.getAttribute('cx') * 1 + translate.x * 1);
+      element.setAttribute('cx', (element.getAttribute('cx') * 1) + (translate.x * 1));
       break;
     default:
   }
@@ -315,7 +292,7 @@ function extractChildren(element) {
     return;
   }
 
-  for (var i = element.children.length - 1; i >= 0; i--) {
+  for (let i = element.children.length - 1; i >= 0; i--) {
     element.parentNode.appendChild(element.children[i]);
   }
 
