@@ -15,6 +15,7 @@ function flattenStyles(svg) {
   const styleElement = svg.getElementsByTagName('style')[0];
   const defs = styleElement.parentNode;
   const styles = styleElement.innerHTML;
+
   for (let i = 0; i <= 100; i++) {
     try {
       const fntRegExp = new RegExp(`\\\.fnt${i}.+font-size:(\\d+)`);
@@ -40,8 +41,6 @@ function flattenStyles(svg) {
         const fill = styles.match(fillRegExp)[1];
         Array.prototype.forEach.call(svg.querySelectorAll(`.fil${i}`), setInlineFill(fill));
       }
-
-      defs.parentNode.removeChild(defs);
     } catch (e) {
       window.console.log(`not found style fnt${i}`);
     }
