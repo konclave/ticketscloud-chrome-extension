@@ -1,3 +1,6 @@
+### 0.7.4
+- fixed seats selection on first plan boot
+
 ### 0.7.3
 - returned `wrap_rows` magic property used when there’s only one sector on the plan
 

@@ -11,9 +11,17 @@ function cleanMeta(svg) {
   svg.removeAttribute('style');
 }
 
-function flattenStyles(svg) {
-  const styleElement = svg.getElementsByTagName('style')[0];
-  const defs = styleElement.parentNode;
+function removeClass(element, className) {
+  let tmp = element.getAttribute('class');
+  tmp = tmp.replace(new RegExp(`\s?${className.slice(1)}`));
+  if (tmp === '') {
+    element.removeAttribute('class');
+  } else {
+    element.setAttribute('class', tmp);
+  }
+}
+
+function flattenStyles(container, styleElement) {
   const styles = styleElement.innerHTML;
 
   for (let i = 0; i <= 100; i++) {
@@ -25,21 +33,37 @@ function flattenStyles(svg) {
 
       if (fntRegExp.test(styles)) {
         const sectorNameFontSize = styles.match(fntRegExp)[1];
-        Array.prototype.forEach.call(svg.querySelectorAll(`.fnt${i}`), setInlineFont(sectorNameFontSize));
+        const className = `.fnt${i}`;
+        Array.prototype.forEach.call(container.querySelectorAll(className), (element) => {
+          setInlineFont(sectorNameFontSize)(element);
+          removeClass(element, className);
+        });
       }
       if (strokeRegExp.test(styles)) {
         const stroke = styles.match(strokeRegExp)[1];
-        Array.prototype.forEach.call(svg.querySelectorAll(`.str${i}`), setInlineStroke(stroke));
+        const className = `.str${i}`;
+        Array.prototype.forEach.call(container.querySelectorAll(className), (element) => {
+          setInlineStroke(stroke)(element);
+          removeClass(element, className);
+        });
       }
 
       if (strokeWidthRegExp.test(styles)) {
         const strokeWidth = styles.match(strokeWidthRegExp)[1];
-        Array.prototype.forEach.call(svg.querySelectorAll(`.str${i}`), setInlineStrokeWidth(strokeWidth));
+        const className = `.str${i}`;
+        Array.prototype.forEach.call(container.querySelectorAll(className), (element) => {
+          setInlineStrokeWidth(strokeWidth)(element);
+          removeClass(element, className);
+        });
       }
 
       if (fillRegExp.test(styles)) {
         const fill = styles.match(fillRegExp)[1];
-        Array.prototype.forEach.call(svg.querySelectorAll(`.fil${i}`), setInlineFill(fill));
+        const className = `.fil${i}`;
+        Array.prototype.forEach.call(container.querySelectorAll(className), (element) => {
+          setInlineFill(fill)(element);
+          removeClass(element, className);
+        });
       }
     } catch (e) {
       window.console.log(`not found style fnt${i}`);

@@ -18,9 +18,11 @@ function wrapSingleShapes(svg) {
 }
 
 function normalize(svg) {
+  const styleElement = svg.getElementsByTagName('style')[0];
+  const container = svg.querySelector('#sector-container');
   svg.setAttribute('main', true);
   process.cleanMeta(svg);
-  process.flattenStyles(svg);
+  process.flattenStyles(container, styleElement);
   wrapSingleShapes(svg);
   return svg;
 }

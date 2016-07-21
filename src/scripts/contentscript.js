@@ -112,7 +112,7 @@ function simplePlanClickCallback(e) {
       Array.prototype.map.call(current, setCircleInactive);
     }
 
-    if (current.item(0) !== seat) {
+    if (current.item(0) !== seat || current.length === 0) {
       setCircleActive(seat);
     }
   }
@@ -161,7 +161,9 @@ function setSectorTitle(seatNode, title) {
 }
 
 function postProcess(svg) {
-  process.flattenStyles(svg);
+  const styleElement = svg.getElementsByTagName('style')[0];
+  const container = svg.querySelector('#plan-container');
+  process.flattenStyles(container, styleElement);
   process.removeClasses(svg);
   process.removeIdTags(svg);
   process.sortNodes(svg);
@@ -313,7 +315,9 @@ function preprocess() {
   process.convertPaths(svg);
   process.sortNodes(svg);
   process.setSectorName(svg.getElementById('plan-container'));
-  process.flattenStyles(svg);
+  const styleElement = svg.getElementsByTagName('style')[0];
+  const container = svg.querySelector('#plan-container');
+  process.flattenStyles(container, styleElement);
 
   return true;
 }
