@@ -54,10 +54,27 @@ function wrapNodeWithGroup(node) {
   return g;
 }
 
+function wrapChildrenWithGroup(node) {
+  const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+  for (let i = 0, j = node.children.length; i < j; i++) {
+    g.appendChild(node.children[0]);
+  }
+  node.appendChild(g);
+  return g;
+}
+
 function wrapSingleGroups() {
   const planContainer = document.getElementById('plan-container');
 
   if (!planContainer) return;
+
+  const wrapRow = planContainer.querySelectorAll('[id*="wrap_rows"]');
+  if (wrapRow.length) {
+    let title = wrapRow[0].getAttribute('id');
+    wrapRow[0].removeAttribute('id');
+    title = title.replace(/\s?wrap_rows\s?/, '');
+    wrapChildrenWithGroup(wrapRow[0].parentNode).setAttribute('id', title);
+  }
 
   const seatsWithoutRow = planContainer.querySelectorAll('[id*="add_row"]');
   if (seatsWithoutRow.length) {

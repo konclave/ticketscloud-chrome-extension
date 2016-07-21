@@ -1,3 +1,9 @@
+### 0.7.3
+- returned `wrap_rows` magic property used when there’s only one sector on the plan
+
+### 0.7.2
+- do not remove `<style>` tag from SVG
+
 ### 0.7.1
 - save data in popup on `enter` key press
 

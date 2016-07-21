@@ -60,3 +60,44 @@
 ```
 
 
+## wrap_rows
+Используется только в *простых* схемах зала.
+Нужен для того, чтобы обернуть в группу сектора группы рядов, если на схеме только один сектор
+### Пример:
+Было: 
+```html
+<g id="plan-container">
+	<g id="A-1_x0020_wrap_rows">
+    <circle class="fil1" cx="21378" cy="4287" r="379"/>
+    <circle class="fil1" cx="21378" cy="4287" r="379"/>
+	</g>
+  <g>
+    <circle class="fil1" cx="21378" cy="4287" r="379"/>
+    <circle class="fil1" cx="21378" cy="4287" r="379"/>
+	</g>
+   <g>
+    <circle class="fil1" cx="21378" cy="4287" r="379"/>
+    <circle class="fil1" cx="21378" cy="4287" r="379"/>
+	</g>
+</g>
+```
+
+Стало:
+```html
+<g id="plan-container">
+	<g id="A-1_x0020_">
+		<g>
+	    <circle class="fil1" cx="21378" cy="4287" r="379"/>
+	    <circle class="fil1" cx="21378" cy="4287" r="379"/>
+		</g>
+	  <g>
+	    <circle class="fil1" cx="21378" cy="4287" r="379"/>
+	    <circle class="fil1" cx="21378" cy="4287" r="379"/>
+		</g>
+	   <g>
+	    <circle class="fil1" cx="21378" cy="4287" r="379"/>
+	    <circle class="fil1" cx="21378" cy="4287" r="379"/>
+		</g>
+	</g>
+</g>
+```
