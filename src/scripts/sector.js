@@ -16,7 +16,7 @@ export default class Sector {
       });
     }
 
-    this.svgLink = null;
+    this.svgLink = this.element.getAttribute('tc-svg-link') || null;
     this.isSelected = false;
   }
 

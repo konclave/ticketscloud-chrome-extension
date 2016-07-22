@@ -1,3 +1,6 @@
+### 0.7.5
+- fix complex plan svg link value pass to popup form if it exists on plan load
+
 ### 0.7.4
 - fixed seats selection on first plan boot
 
