@@ -14,7 +14,7 @@ function cleanMeta(svg) {
 function removeClass(element, className) {
   let tmp = element.getAttribute('class');
   tmp = tmp.replace(new RegExp(`\s?${className.slice(1)}`));
-  if (tmp === '') {
+  if (!tmp) {
     element.removeAttribute('class');
   } else {
     element.setAttribute('class', tmp);
