@@ -1,6 +1,6 @@
 import * as process from './process';
 import * as utils from './utils';
-import {ComplexPlan, isComplexPlan} from './complex';
+import {ComplexPlan, hasComplexPlan} from './complex';
 
 let complexPlan;
 
@@ -358,7 +358,7 @@ function applyAction(action, response) {
 
   switch (action) {
     case 'getData':
-      if (isComplexPlan(svg)) {
+      if (hasComplexPlan(svg)) {
         response({
           isComplex: true,
           sectors: complexPlan.getSelected()
@@ -374,7 +374,7 @@ function applyAction(action, response) {
       }
       break;
     case 'getSVG':
-      if (isComplexPlan(svg)) {
+      if (hasComplexPlan(svg)) {
         complexPlan.deselectAll();
         response(complexPlan.svgNode.outerHTML);
       } else {
@@ -420,13 +420,18 @@ function appendSVG(svg) {
   window.chrome.runtime.onMessage.addListener(onMessageCallback);
 }
 
+function hasSimplePlan(svg) {
+  return !!svg.querySelector('#plan-container');
+}
+
 function init() {
   const svg = document.querySelector('svg');
   if (!svg) return;
-  if (isComplexPlan(svg)) {
+  if (hasComplexPlan(svg)) {
     complexPlan = new ComplexPlan(svg);
     appendSVG(complexPlan.svg);
-  } else {
+  }
+  if (hasSimplePlan(svg)) {
     if (preprocess()) {
       setSeatNumbers();
       setRowNumbers();

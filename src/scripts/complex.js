@@ -27,7 +27,7 @@ function normalize(svg) {
   return svg;
 }
 
-export function isComplexPlan(svg) {
+export function hasComplexPlan(svg) {
   return !!svg.querySelector('#sector-container');
 }
 
