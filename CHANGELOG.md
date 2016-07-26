@@ -1,3 +1,9 @@
+### 0.7.7
+- bug fixes
+
+### 0.7.6
+- bug fixes
+
 ### 0.7.5
 - fix complex plan svg link value pass to popup form if it exists on plan load
 

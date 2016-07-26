@@ -305,6 +305,7 @@ function preprocess() {
   const svg = document.querySelector('svg');
 
   process.cleanMeta(svg);
+  process.cleanContainer(svg);
   process.wrapSingleGroups(svg);
 
   if (!checkStructure(svg)) {

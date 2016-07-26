@@ -11,9 +11,13 @@ function cleanMeta(svg) {
   svg.removeAttribute('style');
 }
 
+function cleanContainer(svg) {
+  svg.querySelector('#plan-container').removeAttribute('tc-sector-name');
+}
+
 function removeClass(element, className) {
   let tmp = element.getAttribute('class');
-  tmp = tmp.replace(new RegExp(`\s?${className.slice(1)}`));
+  tmp = tmp.replace(new RegExp(`\s?${className.slice(1)}`), '');
   if (!tmp) {
     element.removeAttribute('class');
   } else {
@@ -61,7 +65,9 @@ function flattenStyles(container, styleElement) {
         const fill = styles.match(fillRegExp)[1];
         const className = `.fil${i}`;
         Array.prototype.forEach.call(container.querySelectorAll(className), (element) => {
-          setInlineFill(fill)(element);
+          if (element.tagName !== 'circle') {
+            setInlineFill(fill)(element);
+          }
           removeClass(element, className);
         });
       }
@@ -399,6 +405,7 @@ function setWidthHeight(svg) {
 }
 
 export {
+  cleanContainer,
   cleanMeta,
   wrapSingleGroups,
   wrapNodeWithGroup,
