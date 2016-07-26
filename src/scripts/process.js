@@ -179,7 +179,7 @@ function getCircleParamsFromPath(path) {
     y = (curve[0].split(' ')[1].split('c')[0] * 1) - r;
   }
 
-  return { x, y, r };
+  return {x, y, r};
 }
 
 function flattenTranslateTransform(node) {
@@ -187,14 +187,14 @@ function flattenTranslateTransform(node) {
   const coords = {x: 0, y: 0};
 
   if (transform) {
-    const translateParams = transform.match(/translate\((\d+\.?\d+?)\,? (\d+\.?\d+)?\)/);
+    const translateParams = transform.match(/translate\((\d+\.?\d+?),? (\d+\.?\d+)?\)/);
     if (translateParams) {
       coords.x = translateParams[1];
       coords.y = translateParams[2];
     }
   }
 
-  Array.prototype.map.call(node.querySelectorAll('circle'), function(seat) {
+  Array.prototype.map.call(node.querySelectorAll('circle'), seat => {
     const x = seat.getAttribute('cx');
     const y = seat.getAttribute('cy');
 
@@ -213,15 +213,13 @@ function flattenTranslateTransform(node) {
 function removeClasses(svg) {
   const seats = svg.querySelector('#plan-container').querySelectorAll('circle, path, polygon, rect');
   if (seats) {
-    Array.prototype.forEach.call(seats, function(seat) {
-      seat.removeAttribute('class');
-    });
+    Array.prototype.forEach.call(seats, seat => seat.removeAttribute('class'));
   }
 }
 
 function removeIdTags(svg) {
   const sectorShapes = svg.querySelectorAll('[id*="sector_shape"]');
-  Array.prototype.forEach.call(sectorShapes, function(sector) {
+  Array.prototype.forEach.call(sectorShapes, sector => {
     // var id = sector.getAttribute('id').replace(/\s?sector_shape\s?/, '');
     sector.setAttribute('fill', 'lightgrey');
     // sector.setAttribute('id', id);
@@ -231,7 +229,7 @@ function removeIdTags(svg) {
 function sortNodes(svg) {
   const sectors = svg.getElementById('plan-container').children;
 
-  Array.prototype.forEach.call(sectors, function(sector) {
+  Array.prototype.forEach.call(sectors, sector => {
     const rows = sector.querySelectorAll('g');
 
     Array.prototype.forEach.call(rows, sortSeats);
@@ -253,7 +251,7 @@ function sortRows(rows) {
 
   arr.sort(rowsCompare);
 
-  appendSortedNodes(arr, parent, function(row, idx) {
+  appendSortedNodes(arr, parent, (row, idx) => {
     if (!row.getAttribute('tc-row-no')) {
       row.setAttribute('tc-row-no', idx + 1);
     }
@@ -264,7 +262,7 @@ function sortSeats(row) {
   const seats = row.getElementsByTagName('circle');
   if (!Array.prototype.slice.call(seats).length) {
     const paths = row.getElementsByTagName('path');
-    Array.prototype.forEach.call(paths, function(path) {
+    Array.prototype.forEach.call(paths, path => {
       const circle = convertPathToCircle(path);
       path.parentNode.replaceChild(circle, path);
     });
@@ -328,7 +326,7 @@ function appendSortedNodes(nodes, parent, callback) {
     nodes = Array.prototype.slice.call(nodes);
   }
 
-  nodes.forEach(function(node, idx) {
+  nodes.forEach((node, idx) => {
     let crlf = null;
     if (callback && typeof callback === 'function') {
       callback(node, idx);
