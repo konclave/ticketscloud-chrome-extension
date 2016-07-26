@@ -425,20 +425,22 @@ function hasSimplePlan(svg) {
 }
 
 function init() {
-  const svg = document.querySelector('svg');
+  let svg = document.querySelector('svg');
   if (!svg) return;
-  if (hasComplexPlan(svg)) {
-    complexPlan = new ComplexPlan(svg);
-    appendSVG(complexPlan.svg);
-  }
+
   if (hasSimplePlan(svg)) {
     if (preprocess()) {
       setSeatNumbers();
       setRowNumbers();
       attachEvents(svg);
     }
-    appendSVG(svg);
   }
+
+  if (hasComplexPlan(svg)) {
+    complexPlan = new ComplexPlan(svg);
+    svg = complexPlan.svg;
+  }
+  appendSVG(svg);
 }
 
 init();

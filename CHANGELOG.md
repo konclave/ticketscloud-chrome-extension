@@ -1,5 +1,9 @@
+### 0.8.1
+- bug fixes
+
 ### 0.8.0
 - able to work with complex plan and simple plan on the same file (i.e. it’s a complex plan with stand up sectors on it)
+
 ### 0.7.7
 - bug fixes
 
